@@ -3,5 +3,8 @@
     {
       "file": ".github/copilot-instructions.md"
     }
-  ]
+],
+"chat.tools.terminal.autoApprove": {
+    "git push": true
+}
 }
