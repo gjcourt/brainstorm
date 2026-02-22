@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check formatting
+        run: make format-check
+
+      - name: Run Markdown linting
+        run: make lint
+
+      - name: Run YAML linting
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: .
+          config_data: |
+            extends: default
+            ignore: |
+              node_modules/
+            rules:
+              line-length: disable
+              document-start: disable
+              truthy: disable
