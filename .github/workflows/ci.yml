@@ -34,6 +34,8 @@ jobs:
           file_or_dir: .
           config_data: |
             extends: default
+            ignore: |
+              node_modules/
             rules:
               line-length: disable
               document-start: disable
