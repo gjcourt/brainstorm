@@ -1,13 +1,12 @@
 .PHONY: format format-check lint test
 
 format:
-	npm run format
+	docker run --rm -v "$$(pwd):/workdir" -w /workdir node:20 npx --yes prettier@3.2.5 --write "**/*.{md,yml,yaml}"
 
 format-check:
-	npm run format:check
+	docker run --rm -v "$$(pwd):/workdir" -w /workdir node:20 npx --yes prettier@3.2.5 --check "**/*.{md,yml,yaml}"
 
 lint:
-	npm run lint
+	docker run --rm -v "$$(pwd):/workdir" -w /workdir node:20 npx --yes markdownlint-cli2@0.13.0 "**/*.md" "#node_modules"
 
-test:
-	npm run test
+test: format-check lint
