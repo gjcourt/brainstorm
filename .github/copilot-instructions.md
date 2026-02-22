@@ -1,8 +1,10 @@
 # Copilot Instructions: Branching and PR Workflow
 
-When working in this repository, you must strictly adhere to the following branching and Pull Request workflow:
+When working in this repository, you must strictly adhere to the following branching and Pull
+Request workflow:
 
 ## 1. Branching Strategy
+
 - **Never commit directly to the `main` branch.**
 - Always create a new branch for any changes, features, or bug fixes.
 - Use descriptive branch names following this convention:
@@ -12,11 +14,14 @@ When working in this repository, you must strictly adhere to the following branc
   - `chore/<short-description>` for maintenance tasks (e.g., linting, CI updates).
 
 ## 2. Committing Changes
+
 - Write clear, concise, and descriptive commit messages.
-- Use the imperative mood in the subject line (e.g., "Add project tracking structure", not "Added" or "Adds").
+- Use the imperative mood in the subject line (e.g., "Add project tracking structure", not "Added"
+  or "Adds").
 - Group related changes into logical commits.
 
 ## 3. Pull Request Workflow
+
 - Once changes are committed to your branch, push the branch to the remote repository.
 - Create a Pull Request (PR) targeting the `main` branch.
 - The PR title should clearly summarize the changes.
@@ -28,12 +33,14 @@ When working in this repository, you must strictly adhere to the following branc
 - Do not merge your own PR without approval (if branch protection rules are in place).
 
 ## 4. Project Tracking Structure
-- Projects are tracked within their respective category folders (e.g., `audio-midi/`).
-- Each category has a `projects/` subfolder containing individual project files.
-- Project files must be named using a numbered prefix and a slug (e.g., `001-midi-controller.md`).
-- The main `projects.md` file in each category serves as an index/dashboard linking to the individual project files.
-- Use Markdown and YAML frontmatter for structured data within project files.
 
-## 5. Linting and Formatting
-- This repository uses local npm scripts for linting and formatting Markdown and YAML files.
-- Always run the formatting and linting scripts before committing changes to ensure CI checks pass.
+- Projects are tracked within their respective category folders (e.g., `01-audio-midi/`).
+- Project files must be placed directly in the category folder (no `projects/` subfolder).
+- Project files must be named using a category prefix, a project number, and a slug (e.g.,
+  `01-001-midi-controller.md`).
+- The main `projects.md` file in each category serves as an index/dashboard linking to the
+  individual project files.
+- Use Markdown and YAML frontmatter for structured data within project files.
+- Every project file MUST include an `## Exit Criteria` section with checkboxes defining what "done"
+  looks like.
+- These design choices are **MUST DO** when making agentic changes to this rep
