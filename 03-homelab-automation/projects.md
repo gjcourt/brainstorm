@@ -1,4 +1,4 @@
-# Homelab & Automation Projects (21)
+# Homelab & Automation Projects (23)
 
 This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastructure.
 
@@ -26,4 +26,6 @@ This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastr
 | 03-018 | [Custom DNS Sinkhole with Analytics](03-018-custom-dns-sinkhole-with-analytics.md)                                             | Not Started | Medium     | 1-4 weeks       |
 | 03-019 | [ESP32-based IR Blaster for Legacy Devices](03-019-esp32-based-ir-blaster-for-legacy-devices.md)                               | Not Started | Easy       | 1-2 days        |
 | 03-020 | [Smart Water Leak Detection and Shutoff](03-020-smart-water-leak-detection-and-shutoff.md)                                     | Not Started | Medium     | 1-4 weeks       |
-| 03-021 | [Custom AI Home Assistant (Jarvis Alternative)](03-021-custom-ai-home-assistant-jarvis-alternative.md)                         | Not Started | Hard       | Months          |
+| 03-021 | [Personal AI Assistant with Voice — QLoRA Fine-Tuned Qwen3-32B](03-021-personal-ai-assistant-voice-qlora.md)                   | Not Started | Hard       | Months          |
+| 03-022 | [AI Coach & Mentor — QLoRA Fine-Tuned Qwen3-32B with RAG Book Corpus](03-022-ai-coach-mentor-qlora-rag.md)                     | Not Started | Hard       | Months          |
+| 03-023 | [Homelab Autonomous Agent — QLoRA Fine-Tuned Qwen2.5-Coder-32B](03-023-homelab-autonomous-agent-qlora.md)                      | Not Started | Hard       | Months          |
