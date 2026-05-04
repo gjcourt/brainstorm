@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'API Integration, Risk Modeling, Data Visualization'
 status: 'Not Started'
+depends_on:
+  - external/prosper
+  - external/lendingclub
 ---
 
 # Peer-to-Peer Lending Portfolio Analyzer

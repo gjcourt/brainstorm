@@ -6,6 +6,8 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Analog Electronics, Op-Amps, Filter Design'
 status: 'Not Started'
+depends_on:
+  - hardware/op-amp
 ---
 
 # Active Crossover Network for Speakers

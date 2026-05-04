@@ -6,6 +6,8 @@ difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'Relays, Magnetic Reed Switches, Homebridge/HomeKit'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
 ---
 
 # ESP32 Garage Door Opener with HomeKit

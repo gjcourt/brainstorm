@@ -6,6 +6,7 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Python/Go, Music Theory, MIDI Generation'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Jazz II-V-I Lick Generator

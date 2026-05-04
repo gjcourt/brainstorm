@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Shop Organization, Custom Tool Holders'
 status: 'Not Started'
+depends_on:
+  - hardware/table-saw
 ---
 
 # Wall-Mounted Tool French Cleat System

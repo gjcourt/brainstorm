@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Mortise and Tenon Joinery, Rack Rail Installation'
 status: 'Not Started'
+depends_on:
+  - hardware/table-saw
 ---
 
 # Hardwood Homelab Server Rack

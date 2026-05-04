@@ -6,6 +6,9 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'C/C++, I2S DACs, Woodworking, Acoustic Design'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
+  - homelab/snapcast
 ---
 
 # Custom ESP32 Multi-Room Audio Receiver

@@ -6,6 +6,7 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'MIDI Sequencing, SoundFonts/Virtual Instruments, Python/Go'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Improvisation Backing Track Generator

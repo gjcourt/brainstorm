@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'BLE Reverse Engineering, Python/Go, WebSockets'
 status: 'Not Started'
+depends_on:
+  - hardware/scale
 ---
 
 # Smart Scale Integration via Bluetooth

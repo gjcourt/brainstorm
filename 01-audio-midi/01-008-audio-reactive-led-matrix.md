@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'FastLED, FFT (Fast Fourier Transform), ESP32'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
 ---
 
 # Audio Reactive LED Matrix

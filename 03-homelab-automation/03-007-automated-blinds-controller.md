@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Stepper Motors, 3D Printing/Mounting, ESPHome'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
+  - homelab/home-assistant
 ---
 
 # Automated Blinds Controller

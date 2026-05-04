@@ -6,6 +6,10 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'NLP, Local LLMs (Llama 3), Python, Text Extraction'
 status: 'Not Started'
+depends_on:
+  - external/edgar
+  - homelab/llm
+  - homelab/cnpg
 ---
 
 # SEC Filing Sentiment Analysis using LLMs

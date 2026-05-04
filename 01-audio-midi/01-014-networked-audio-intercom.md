@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'VoIP, SIP, ESP32, Audio Codecs (Opus)'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
 ---
 
 # Networked Audio Intercom

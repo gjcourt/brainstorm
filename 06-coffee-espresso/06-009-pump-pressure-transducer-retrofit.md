@@ -6,6 +6,9 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Plumbing/Fittings (BSPP/NPT), Analog Sensors, ADC Calibration'
 status: 'Not Started'
+depends_on:
+  - hardware/lucca-a53
+  - hardware/esp32
 ---
 
 # Pump Pressure Transducer Retrofit

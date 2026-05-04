@@ -6,6 +6,9 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Go, XML/XBRL Parsing, SEC EDGAR API, Database Design'
 status: 'Not Started'
+depends_on:
+  - external/edgar
+  - homelab/cnpg
 ---
 
 # Automated EDGAR 10-K/10-Q XBRL Parser

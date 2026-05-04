@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Python/Go, Audio Analysis, Data Visualization'
 status: 'Not Started'
+depends_on:
+  - hardware/audio-interface
 ---
 
 # Room Acoustics Measurement Tool

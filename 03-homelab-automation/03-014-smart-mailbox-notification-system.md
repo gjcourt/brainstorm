@@ -6,6 +6,8 @@ difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'LoRa/Zigbee, Battery Optimization, Microswitches'
 status: 'Not Started'
+depends_on:
+  - homelab/home-assistant
 ---
 
 # Smart Mailbox Notification System

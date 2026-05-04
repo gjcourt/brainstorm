@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'LED Matrix Displays, Go/Python APIs, Box Making'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
+  - external/stock-api
 ---
 
 # Financial Ticker Display in Hardwood Enclosure

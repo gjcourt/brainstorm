@@ -6,6 +6,9 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Microcontroller Wiring, `leva!` Firmware, High-Voltage Safety, PID Tuning'
 status: 'Not Started'
+depends_on:
+  - hardware/lucca-a53
+  - hardware/esp32
 ---
 
 # Lucca A53 Mini `leva!` Firmware Integration

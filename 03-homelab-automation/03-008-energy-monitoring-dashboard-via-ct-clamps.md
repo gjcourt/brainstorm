@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'ESP32, Current Transformers (CT), Mains Voltage Safety'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
+  - homelab/home-assistant
 ---
 
 # Energy Monitoring Dashboard via CT Clamps

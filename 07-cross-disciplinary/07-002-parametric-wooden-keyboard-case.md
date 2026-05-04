@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: '3D Modeling (Fusion 360/OpenSCAD), CNC Routing/Woodworking'
 status: 'Not Started'
+depends_on:
+  - hardware/mechanical-keyboard-pcb
 ---
 
 # Parametric Wooden Keyboard Case

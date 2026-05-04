@@ -6,6 +6,9 @@ difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'ESPHome, Home Assistant, BLE Beacons'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
+  - homelab/home-assistant
 ---
 
 # Multi-zone BLE Presence Detection

@@ -6,6 +6,7 @@ difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'Shaping, Sanding, Finishing'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Custom Mechanical Keyboard Wrist Rest

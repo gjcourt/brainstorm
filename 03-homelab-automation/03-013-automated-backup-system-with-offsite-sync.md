@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Restic, Borg, Cron, Cloud Storage (B2/S3)'
 status: 'Not Started'
+depends_on:
+  - homelab/talos
+  - external/backblaze-b2
 ---
 
 # Automated Backup System with Offsite Sync

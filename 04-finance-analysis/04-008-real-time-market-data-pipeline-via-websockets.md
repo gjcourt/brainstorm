@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'WebSockets, Redis Pub/Sub, Go Concurrency'
 status: 'Not Started'
+depends_on:
+  - external/polygon
 ---
 
 # Real-time Market Data Pipeline via WebSockets

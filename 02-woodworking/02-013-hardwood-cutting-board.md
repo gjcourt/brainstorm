@@ -6,6 +6,9 @@ difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'Edge Gluing, Planing, Sanding'
 status: 'Not Started'
+depends_on:
+  - hardware/table-saw
+  - hardware/planer
 ---
 
 # Hardwood Cutting Board

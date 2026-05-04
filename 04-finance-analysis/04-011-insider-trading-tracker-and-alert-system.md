@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'SEC Form 4 Parsing, Web Scraping, Notification Systems (Slack/Discord)'
 status: 'Not Started'
+depends_on:
+  - external/edgar
+  - homelab/cnpg
 ---
 
 # Insider Trading Tracker and Alert System

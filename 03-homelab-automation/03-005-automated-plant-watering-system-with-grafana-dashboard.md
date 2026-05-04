@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'ESP32, Capacitive Soil Sensors, Pumps, InfluxDB'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
+  - homelab/grafana
 ---
 
 # Automated Plant Watering System with Grafana Dashboard

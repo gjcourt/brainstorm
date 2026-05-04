@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'GitHub Actions/GitLab CI, ArgoCD, Flux, Ansible'
 status: 'Not Started'
+depends_on:
+  - homelab/flux
+  - homelab/talos
 ---
 
 # CI/CD Pipeline for Home Infrastructure

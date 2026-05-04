@@ -6,6 +6,7 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Go Backend, React Frontend, PostgreSQL, WebSockets'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Practice Timer and Analytics Dashboard

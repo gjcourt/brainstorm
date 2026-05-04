@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'RFID/NFC Readers, Wiegand Protocol, Electronic Strikes'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
+  - homelab/home-assistant
 ---
 
 # Custom RFID Door Lock System

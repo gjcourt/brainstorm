@@ -6,6 +6,8 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'C++, RTOS, Voice Allocation, Envelope Generation'
 status: 'Not Started'
+depends_on:
+  - hardware/midi-keyboard
 ---
 
 # Polyphonic Synthesizer Firmware

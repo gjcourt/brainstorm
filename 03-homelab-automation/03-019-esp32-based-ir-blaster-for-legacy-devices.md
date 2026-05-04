@@ -6,6 +6,9 @@ difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'IR LEDs/Receivers, Signal Decoding, ESPHome'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
+  - homelab/home-assistant
 ---
 
 # ESP32-based IR Blaster for Legacy Devices

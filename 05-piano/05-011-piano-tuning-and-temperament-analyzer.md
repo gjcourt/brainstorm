@@ -6,6 +6,8 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'DSP, Fast Fourier Transform (FFT), Inharmonicity Calculation'
 status: 'Not Started'
+depends_on:
+  - hardware/microphone
 ---
 
 # Piano Tuning and Temperament Analyzer

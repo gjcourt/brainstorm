@@ -6,6 +6,9 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Furniture Design, Leg Tapers, Record Storage'
 status: 'Not Started'
+depends_on:
+  - hardware/table-saw
+  - hardware/planer
 ---
 
 # Record Player Console Table

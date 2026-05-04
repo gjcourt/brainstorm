@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Thermocouples (MAX31855), ESP32, Artisan/Cropster Integration'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
+  - hardware/thermocouple
 ---
 
 # Roasting Profile Logger

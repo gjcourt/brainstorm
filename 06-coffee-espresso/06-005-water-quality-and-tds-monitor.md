@@ -6,6 +6,10 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Conductivity Sensors, Calibration, ESPHome'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
+  - homelab/home-assistant
+  - homelab/mqtt
 ---
 
 # Water Quality and TDS Monitor

@@ -6,6 +6,10 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'ESP32, MIDI Parsing, OLED Displays, Jazz Theory'
 status: 'Not Started'
+depends_on:
+  - hardware/midi-keyboard
+  - hardware/esp32
+  - hardware/oled-display
 ---
 
 # Real-time MIDI Jazz Voicing Analyzer

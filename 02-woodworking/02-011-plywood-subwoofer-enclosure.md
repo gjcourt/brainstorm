@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Circle Routing, Port Tuning, Heavy Assembly'
 status: 'Not Started'
+depends_on:
+  - hardware/table-saw
 ---
 
 # Plywood Subwoofer Enclosure

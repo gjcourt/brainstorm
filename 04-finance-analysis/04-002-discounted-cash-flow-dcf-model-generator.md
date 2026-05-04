@@ -6,6 +6,9 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Financial Modeling, WACC Calculation, Terminal Value, Go/Python'
 status: 'Not Started'
+depends_on:
+  - external/edgar
+  - homelab/cnpg
 ---
 
 # Discounted Cash Flow (DCF) Model Generator

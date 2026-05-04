@@ -6,6 +6,10 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'High-Frequency Trading Concepts, Multiple Exchange APIs, Low Latency Go'
 status: 'Not Started'
+depends_on:
+  - external/binance
+  - external/coinbase
+  - external/kraken
 ---
 
 # Cryptocurrency Arbitrage Bot

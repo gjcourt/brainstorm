@@ -8,6 +8,8 @@ target_skills:
   'QLoRA Fine-Tuning, STT/TTS Pipeline, vLLM Serving, LoRA Adapter Hot-Swap, Python, Axolotl,
   UnSloth'
 status: 'Not Started'
+depends_on:
+  - homelab/llm
 ---
 
 # Personal AI Assistant with Voice — QLoRA Fine-Tuned Qwen3-32B

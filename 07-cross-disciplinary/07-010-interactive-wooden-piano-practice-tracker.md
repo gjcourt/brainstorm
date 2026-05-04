@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Woodworking, RFID/NFC, ESP32, Database Integration'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
+  - hardware/midi-keyboard
 ---
 
 # Interactive Wooden Piano Practice Tracker

@@ -6,6 +6,10 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'C++, PID Control, HVAC Wiring, MQTT'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
+  - homelab/mqtt
+  - homelab/home-assistant
 ---
 
 # Custom ESP32 Smart Thermostat

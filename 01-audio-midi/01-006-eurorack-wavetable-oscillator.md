@@ -6,6 +6,8 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Embedded C, DACs, Hardware Design, DSP'
 status: 'Not Started'
+depends_on:
+  - hardware/dac
 ---
 
 # Eurorack Wavetable Oscillator

@@ -6,6 +6,7 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Spaced Repetition Algorithms (SM-2), Database Design, Web App'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Repertoire Spaced Repetition System

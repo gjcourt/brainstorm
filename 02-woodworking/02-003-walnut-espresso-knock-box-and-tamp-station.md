@@ -6,6 +6,8 @@ difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'Box Making, Routing, Finishing (Food Safe)'
 status: 'Not Started'
+depends_on:
+  - hardware/table-saw
 ---
 
 # Walnut Espresso Knock Box and Tamp Station

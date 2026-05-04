@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Thermal Mass, RTD Sensors, Precision Mounting'
 status: 'Not Started'
+depends_on:
+  - hardware/espresso-machine
+  - hardware/thermocouple
 ---
 
 # Grouphead Temperature Sensor

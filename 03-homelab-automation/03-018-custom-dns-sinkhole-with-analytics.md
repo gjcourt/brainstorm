@@ -6,6 +6,10 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Pi-hole/AdGuard Home, DNS, Grafana'
 status: 'Not Started'
+depends_on:
+  - homelab/adguard
+  - homelab/grafana
+  - homelab/loki
 ---
 
 # Custom DNS Sinkhole with Analytics

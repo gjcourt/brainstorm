@@ -6,6 +6,9 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Go, Kubernetes API, Operator SDK'
 status: 'Not Started'
+depends_on:
+  - homelab/home-assistant
+  - homelab/talos
 ---
 
 # K8s Operator for Home Assistant Deployments

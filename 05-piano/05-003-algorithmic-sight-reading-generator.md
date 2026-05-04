@@ -6,6 +6,7 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'MusicXML/LilyPond, Python/Go, Algorithmic Composition'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Algorithmic Sight-Reading Generator
