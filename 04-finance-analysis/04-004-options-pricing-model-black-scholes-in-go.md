@@ -6,6 +6,7 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Go, Quantitative Finance, Statistical Math'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Options Pricing Model (Black-Scholes) in Go

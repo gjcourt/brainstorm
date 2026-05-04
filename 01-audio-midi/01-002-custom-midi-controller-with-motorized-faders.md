@@ -6,6 +6,7 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'PCB Design, C/C++, Motor Control, MIDI Protocol'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Custom MIDI Controller with Motorized Faders

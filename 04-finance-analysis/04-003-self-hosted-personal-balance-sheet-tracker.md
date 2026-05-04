@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Plaid API, React, Go, Double-Entry Accounting'
 status: 'Not Started'
+depends_on:
+  - external/plaid
+  - homelab/cnpg
 ---
 
 # Self-Hosted Personal Balance Sheet Tracker

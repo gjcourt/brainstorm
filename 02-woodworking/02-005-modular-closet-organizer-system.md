@@ -6,6 +6,8 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Cabinetry, Edge Banding, Drawer Slides'
 status: 'Not Started'
+depends_on:
+  - hardware/table-saw
 ---
 
 # Modular Closet Organizer System

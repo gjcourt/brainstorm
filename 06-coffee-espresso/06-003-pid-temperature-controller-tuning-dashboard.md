@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Control Theory (PID), Python/Go, Data Visualization'
 status: 'Not Started'
+depends_on:
+  - hardware/espresso-machine
+  - hardware/thermocouple
 ---
 
 # PID Temperature Controller Tuning Dashboard

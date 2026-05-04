@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Web MIDI API, D3.js/Canvas, Real-time Data Visualization'
 status: 'Not Started'
+depends_on:
+  - hardware/midi-keyboard
 ---
 
 # Real-time Performance Velocity Visualizer

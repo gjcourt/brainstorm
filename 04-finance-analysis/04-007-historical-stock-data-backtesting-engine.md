@@ -6,6 +6,9 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Time-Series Databases (TimescaleDB), Event-Driven Architecture, Go'
 status: 'Not Started'
+depends_on:
+  - external/polygon
+  - homelab/cnpg
 ---
 
 # Historical Stock Data Backtesting Engine

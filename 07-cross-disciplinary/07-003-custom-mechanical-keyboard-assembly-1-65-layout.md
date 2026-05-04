@@ -6,6 +6,8 @@ difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'Soldering, Switch Lubing, QMK/VIA Configuration'
 status: 'Not Started'
+depends_on:
+  - hardware/mechanical-keyboard-pcb
 ---
 
 # Custom Mechanical Keyboard Assembly 1 (65% Layout)

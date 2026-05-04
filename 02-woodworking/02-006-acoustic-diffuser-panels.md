@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Precision Cutting, Repetitive Assembly, Acoustic Theory'
 status: 'Not Started'
+depends_on:
+  - hardware/table-saw
 ---
 
 # Acoustic Diffuser Panels

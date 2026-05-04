@@ -6,6 +6,7 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'K3s, etcd, Load Balancing (MetalLB), Storage (Longhorn)'
 status: 'Not Started'
+depends_on: []
 ---
 
 # High-Availability K3s Cluster Setup

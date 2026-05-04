@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Upholstery, Hardware Installation, Leg Joinery'
 status: 'Not Started'
+depends_on:
+  - hardware/table-saw
+  - hardware/planer
 ---
 
 # Adjustable Piano Bench with Storage

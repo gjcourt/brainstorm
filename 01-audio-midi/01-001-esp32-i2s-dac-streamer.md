@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'C++, ESP-IDF, I2S, Audio Streaming'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
 ---
 
 # ESP32 I2S DAC Streamer

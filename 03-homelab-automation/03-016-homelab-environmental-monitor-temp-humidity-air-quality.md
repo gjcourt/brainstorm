@@ -6,6 +6,10 @@ difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'I2C Sensors (BME680), ESPHome, Prometheus'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
+  - homelab/prometheus
+  - homelab/home-assistant
 ---
 
 # Homelab Environmental Monitor (Temp/Humidity/Air Quality)

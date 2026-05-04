@@ -6,6 +6,8 @@ difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'BLE MIDI, ESP32, Basic Soldering'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
 ---
 
 # Bluetooth LE MIDI Foot Pedal

@@ -6,6 +6,8 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'MIDI Parsing, Quantization Algorithms, MusicXML Generation'
 status: 'Not Started'
+depends_on:
+  - hardware/midi-keyboard
 ---
 
 # MIDI to Sheet Music Transcriber

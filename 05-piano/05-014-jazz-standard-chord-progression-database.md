@@ -6,6 +6,7 @@ difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'JSON/YAML Parsing, Simple Web Frontend'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Jazz Standard Chord Progression Database

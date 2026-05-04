@@ -6,6 +6,7 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Go/Python, Algorithmic Composition, MIDI'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Generative Ambient Music Player

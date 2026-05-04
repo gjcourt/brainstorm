@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Financial APIs (FMP/Alpha Vantage), SQL, Data Filtering'
 status: 'Not Started'
+depends_on:
+  - external/alphavantage
+  - homelab/cnpg
 ---
 
 # Dividend Yield and Growth Screener

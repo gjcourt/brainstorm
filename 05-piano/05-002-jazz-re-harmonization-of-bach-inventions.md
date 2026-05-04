@@ -6,6 +6,7 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Advanced Harmony, Counterpoint, Arrangement, Notation Software (Sibelius/Dorico)'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Jazz Re-harmonization of Bach Inventions

@@ -6,6 +6,9 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Furniture Design, Glass/Acrylic Integration, Raspberry Pi/ESP32, UI Design'
 status: 'Not Started'
+depends_on:
+  - hardware/raspberry-pi
+  - homelab/homepage
 ---
 
 # Smart Coffee Table with Built-in Display

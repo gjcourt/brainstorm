@@ -6,6 +6,9 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Microcontrollers, DACs, Analog Calibration'
 status: 'Not Started'
+depends_on:
+  - hardware/midi-keyboard
+  - hardware/dac
 ---
 
 # MIDI to CV Converter

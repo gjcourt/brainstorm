@@ -6,6 +6,8 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Acoustic Design, MDF/Plywood Joinery, Veneering'
 status: 'Not Started'
+depends_on:
+  - hardware/table-saw
 ---
 
 # Custom Studio Monitor Speaker Cabinets

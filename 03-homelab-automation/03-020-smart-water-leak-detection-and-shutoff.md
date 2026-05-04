@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Zigbee Water Sensors, Motorized Ball Valves, Automations'
 status: 'Not Started'
+depends_on:
+  - homelab/home-assistant
 ---
 
 # Smart Water Leak Detection and Shutoff

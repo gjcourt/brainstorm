@@ -6,6 +6,8 @@ difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'PostgreSQL, Go/Python Backend, Simple Web UI'
 status: 'Not Started'
+depends_on:
+  - homelab/cnpg
 ---
 
 # Espresso Recipe and Extraction Database

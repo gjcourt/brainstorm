@@ -6,6 +6,7 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Go, Digital Signal Processing (DSP), Real-time Audio'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Go-based DSP Audio Effects Engine

@@ -6,6 +6,10 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'FRED API, Data Visualization (D3.js/Grafana), Data Pipelines'
 status: 'Not Started'
+depends_on:
+  - external/fred
+  - homelab/cnpg
+  - homelab/grafana
 ---
 
 # Macro-Economic Indicator Dashboard

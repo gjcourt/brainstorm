@@ -6,6 +6,8 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'MIDI Parsing, Relays, `leva!` API, Safety Overrides'
 status: 'Not Started'
+depends_on:
+  - hardware/midi-keyboard
 ---
 
 # MIDI-Controlled Espresso Machine (Joke/Fun)

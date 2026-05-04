@@ -6,6 +6,7 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Networking, VLANs, Firewall Rules, Hardware Assembly'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Custom pfSense/OPNsense Router Build

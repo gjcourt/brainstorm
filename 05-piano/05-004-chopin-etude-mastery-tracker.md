@@ -6,6 +6,7 @@ difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'React/Vue, Local Storage, Data Visualization'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Chopin Etude Mastery Tracker

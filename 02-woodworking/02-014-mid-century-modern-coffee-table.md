@@ -6,6 +6,10 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Angled Joinery, Tapered Legs, Complex Glue-ups'
 status: 'Not Started'
+depends_on:
+  - hardware/table-saw
+  - hardware/planer
+  - hardware/jointer
 ---
 
 # Mid-Century Modern Coffee Table

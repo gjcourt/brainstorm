@@ -8,6 +8,10 @@ target_skills:
   'QLoRA Fine-Tuning, Agentic Scaffolding, Tool Use, LangGraph, kubectl/talosctl/flux CLI,
   Kubernetes, Axolotl'
 status: 'Not Started'
+depends_on:
+  - homelab/llm
+  - homelab/talos
+  - homelab/flux
 ---
 
 # Homelab Autonomous Agent — QLoRA Fine-Tuned Qwen2.5-Coder-32B

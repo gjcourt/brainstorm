@@ -6,6 +6,7 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Web Audio API, JavaScript/TypeScript, UI/UX Design'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Custom Metronome with Polyrhythms

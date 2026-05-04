@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Modern Portfolio Theory (MPT), Optimization Algorithms, Brokerage APIs'
 status: 'Not Started'
+depends_on:
+  - external/ibkr
 ---
 
 # Portfolio Rebalancing Algorithm

@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Go, MIDI Protocol, Concurrency'
 status: 'Not Started'
+depends_on:
+  - hardware/midi-keyboard
 ---
 
 # MIDI Router and Filter in Go

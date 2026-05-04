@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'T-Track Installation, Fence Construction, Lamination'
 status: 'Not Started'
+depends_on:
+  - hardware/table-saw
 ---
 
 # Custom Router Table

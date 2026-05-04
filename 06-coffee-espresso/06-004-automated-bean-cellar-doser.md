@@ -6,6 +6,9 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: '3D Printing/CAD, Stepper Motors, Load Cells, Microcontrollers'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
+  - hardware/scale
 ---
 
 # Automated Bean Cellar Doser

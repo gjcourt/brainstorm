@@ -6,6 +6,7 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Cabinetry, Soundproofing Materials, Thermal Management (Fans/Airflow)'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Homelab Server Rack Acoustic Enclosure

@@ -6,6 +6,7 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Python, Scikit-Learn, NLP, CSV Parsing'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Personal Expense Categorization using ML

@@ -6,6 +6,7 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Ear Training, Transcription, Harmonic Analysis'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Bill Evans Solo Transcription and Analysis

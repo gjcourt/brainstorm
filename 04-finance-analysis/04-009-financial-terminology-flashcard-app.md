@@ -6,6 +6,7 @@ difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'React Native/Flutter, Spaced Repetition Algorithms'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Financial Terminology Flashcard App

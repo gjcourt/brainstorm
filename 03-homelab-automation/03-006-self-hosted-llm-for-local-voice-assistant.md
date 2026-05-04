@@ -6,6 +6,9 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'Docker, GPU Passthrough, LocalAI/Ollama, Home Assistant'
 status: 'Not Started'
+depends_on:
+  - homelab/llm
+  - homelab/home-assistant
 ---
 
 # Self-Hosted LLM for Local Voice Assistant

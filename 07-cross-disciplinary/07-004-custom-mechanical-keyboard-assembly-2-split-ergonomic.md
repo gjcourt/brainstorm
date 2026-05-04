@@ -6,6 +6,8 @@ difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'SMD Soldering, ZMK Firmware, TRRS Cables'
 status: 'Not Started'
+depends_on:
+  - hardware/mechanical-keyboard-pcb
 ---
 
 # Custom Mechanical Keyboard Assembly 2 (Split Ergonomic)

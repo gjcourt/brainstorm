@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'French Cleats, Routing, Basic Wiring'
 status: 'Not Started'
+depends_on:
+  - hardware/table-saw
 ---
 
 # Floating Shelves with Hidden LED Lighting

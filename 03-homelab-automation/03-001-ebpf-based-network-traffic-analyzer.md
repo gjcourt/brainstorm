@@ -6,6 +6,9 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'C, eBPF, Go, Linux Kernel'
 status: 'Not Started'
+depends_on:
+  - homelab/prometheus
+  - homelab/talos
 ---
 
 # eBPF-based Network Traffic Analyzer

@@ -6,6 +6,7 @@ difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'HTML5 Canvas/SVG, JavaScript, Music Theory'
 status: 'Not Started'
+depends_on: []
 ---
 
 # Interactive Circle of Fifths Explorer

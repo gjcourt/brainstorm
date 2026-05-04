@@ -6,6 +6,8 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'Hand Tool Joinery (Dovetails/Box Joints), Precision Fitting'
 status: 'Not Started'
+depends_on:
+  - hardware/table-saw
 ---
 
 # Japanese Toolbox for Electronics Tools

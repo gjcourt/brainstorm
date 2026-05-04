@@ -6,6 +6,8 @@ difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'C/C++, Network Time Protocol (NTP), UDP Multicast'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
 ---
 
 # Multi-Room Audio Sync Protocol

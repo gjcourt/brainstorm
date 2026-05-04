@@ -6,6 +6,11 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills: 'ESP32, Load Cells, Pressure Transducers, MQTT/Grafana'
 status: 'Not Started'
+depends_on:
+  - hardware/esp32
+  - hardware/espresso-machine
+  - homelab/mqtt
+  - homelab/grafana
 ---
 
 # ESP32 Espresso Shot Profiler and Logger
