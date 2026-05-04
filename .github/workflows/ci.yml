@@ -19,6 +19,14 @@ jobs:
       - name: Run Markdown linting
         run: make lint
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Check repo invariants (frontmatter, Exit Criteria, counts)
+        run: make check-invariants
+
       - name: Run YAML linting
         uses: ibiqlik/action-yamllint@v3
         with:
