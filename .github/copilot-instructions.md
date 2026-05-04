@@ -44,3 +44,21 @@ Request workflow:
 - Every project file MUST include an `## Exit Criteria` section with checkboxes defining what "done"
   looks like.
 - These design choices are **MUST DO** when making agentic changes to this rep
+
+## 5. Branch Protection
+
+The "never commit to `main`" rule is backed by:
+
+- `.github/CODEOWNERS` — every path requires review from `@gjcourt`.
+- The `main` branch should be configured (in GitHub repository settings → Branches → Branch
+  protection rules) with:
+  - Require a pull request before merging.
+  - Require approvals: 1.
+  - Require review from Code Owners.
+  - Require status checks to pass before merging:
+    - `lint-and-format` (the CI job in `.github/workflows/ci.yml`).
+  - Require branches to be up to date before merging.
+  - Do not allow bypassing the above settings.
+- The CI job runs `make check-invariants`, which fails if any project file is missing required
+  frontmatter keys, an `## Exit Criteria` section, or if README/projects.md counts disagree with the
+  actual file count.
