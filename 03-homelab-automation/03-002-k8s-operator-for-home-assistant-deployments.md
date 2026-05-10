@@ -16,19 +16,18 @@ depends_on:
 ## Description
 
 Build a custom Kubernetes Operator in Go that manages the lifecycle of Home Assistant instances,
-including automated backups, configuration injection, and sidecar proxy management for external
-access.
+including automated backups, structured restore, declarative config injection, and (optionally) an
+mDNS reflector DaemonSet for LAN discovery.
 
 ## Exit Criteria
 
 - [ ] `HomeAssistantInstance` CRD installed in cluster; `kubectl get homeassistantinstances` works
 - [ ] Controller reconciles a `HomeAssistantInstance` CR to a running HA Pod/Deployment with correct
       config
-- [ ] Automated backup: each instance spec includes a backup schedule (cron); operator
-      creates/manages a CronJob that tars the HA config dir and stores to a configured S3 bucket or
-      PVC
-- [ ] Backup restore: annotating an instance with `ha-operator/restore: latest` (or a specific
-      backup name) triggers restore from backup before HA pod starts
+- [ ] Automated backup: each instance spec includes a backup schedule (cron) and retention; the
+      operator drives a per-instance backup pipeline (CronJob + Job, Velero `Schedule`, or CSI
+      volume snapshot — choice deferred to Phase 1) whose output lands in a configured S3 bucket or
+      PVC and respects retention
 - [ ] Config injection: a referenced ConfigMap is mounted as a read-only fragment under `/config/`
       (e.g. `packages/operator.yaml`) and pulled in via HA's `!include`/`packages:` mechanism so it
       does not collide with HA's writable state in `/config`; ConfigMap changes trigger a rolling
@@ -36,9 +35,9 @@ access.
 - [ ] Restore subresource / CR: a structured `HomeAssistantRestore` CR (or `spec.restore` block with
       explicit `completed` status) drives restores — _not_ free-form annotations — so the operation
       is idempotent and auditable
-- [ ] Sidecar proxy: operator can optionally run an avahi reflector on the host network (via a
-      DaemonSet selected by node label, _not_ a pod-network sidecar — Pod overlay does not carry
-      link-local multicast) for mDNS discovery from LAN clients; gated by `spec.proxy.enabled`
+- [ ] mDNS discovery (optional): operator can run an avahi reflector on the host network as a
+      DaemonSet selected by node label (_not_ a pod-network sidecar — Pod overlay does not carry
+      link-local multicast); gated by `spec.proxy.enabled`
 - [ ] `.status` subresource: phase field reflects `Pending / Running / BackupInProgress / Degraded`;
       last backup timestamp and backup count exposed
 - [ ] Operator deployed via Helm chart committed to homelab GitOps repo (Flux reconciles it)
