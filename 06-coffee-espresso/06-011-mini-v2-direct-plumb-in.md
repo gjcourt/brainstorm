@@ -92,11 +92,12 @@ BoM before going further.
 
 ## Bill of materials
 
-Note: this plan does **not** thread into the espresso machine itself (no boiler-side BSP joints) —
-all connections are on the supply line between the Aquasana output and the reservoir float valve,
-which is push-to-connect / compression / 1/4" male thread. So BSP vs NPT only matters if a part spec
-says it (e.g. a regulator's port threading); double-check thread standard before buying. Use
-single-use fiber washers on any tapered-thread joint that gets disassembled.
+Thread-standard note: this plan does **not** plumb into the boiler — all joints live on the supply
+line between the Aquasana output and the reservoir float valve. Most espresso-aftermarket regulators
+and RO-style float valves use **G-thread BSP-parallel** ports (sealed with a fiber/nylon washer
+against a flat face), not tapered NPT. **Don't mix:** an NPT male into a BSPP female will start
+threading and then leak under pressure. Verify each part's thread standard from its spec sheet
+before buying, and replace fiber washers on every disassembly.
 
 | #   | Item                                       | Spec                                                                | Notes                                                                                                |
 | --- | ------------------------------------------ | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
@@ -174,9 +175,14 @@ Mount the regulator stack against the cabinet wall — don't let it hang from th
 
 ## Reserved future enhancements
 
-- **Solenoid auto-shutoff**: splice into the reserved gap in the regulation stack. NC solenoid wired
-  to machine power so the line is depressurized whenever the machine is off. Insurance against a 3
-  a.m. float-valve failure flooding the kitchen. ~$30–60 in parts.
+- **Solenoid auto-shutoff**: splice into the reserved gap in the regulation stack. NC solenoid
+  energized whenever the machine is on, so the line is depressurized whenever the machine is off.
+  Insurance against a 3 a.m. float-valve failure flooding the kitchen. ~$30–60 in parts. Wiring
+  options worth comparing before committing: (a) smart plug + 120VAC solenoid coil, both gated by a
+  Home Assistant rule (lowest-risk, no machine modification); (b) 24VAC solenoid driven by a small
+  external transformer also gated by a smart plug; (c) tapping the machine's own switched mains
+  through a relay (most "automatic" but voids any reversibility and requires opening the case).
+  Option (a) is the default unless there's a strong reason otherwise.
 - **Drain plumb**: drill the drip tray for a hose barb, run silicone hose to a drain on continuous
   downhill slope. Independent workstream.
 - **Softening upgrade**: if hardness creeps up (annual re-test), add Pentair Claris or BWT Bestmax
