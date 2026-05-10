@@ -7,7 +7,7 @@ time_commitment: '1-2 days'
 target_skills: 'Water Plumbing, Pressure Regulation, BSP Fittings'
 status: 'Not Started'
 depends_on:
-  - hardware/lucca-a53-mini
+  - hardware/lucca-a53
 ---
 
 # Mini Vivaldi II Direct Plumb-In via Reservoir Float-Fill
@@ -21,7 +21,8 @@ respectful of the vibe pump's design constraints.
 The s1cafe.com / home-barista.com community converged answer for vibe-pump Mini V2 plumb-in is
 **reservoir float-fill, not inlet-side direct plumb**: the line keeps the existing tank topped up
 via a mechanical float valve; the pump still gravity-feeds from the tank exactly as
-factory-designed. This preserves pump life (5–10+ years vs 1–2 years on inlet plumb), keeps the
+factory-designed. Community reports suggest this preserves pump life substantially (multi-year vs.
+~1-2 years on inlet plumb where the vibe pump fights inlet pressure on every stroke), keeps the
 existing low-water float **switch** as dry-run protection, and is fully reversible without internal
 modification.
 
@@ -64,8 +65,9 @@ mechanical **float valve** controls fill, not pump enable.
    - Stuck-closed float valve → tank slowly drains → original low-water switch trips → exact same
      failure mode as today.
 4. Reversible: disconnect at the regulator, refill manually, machine is back to stock.
-5. Pressure-tolerant: even if the regulator fails high (60+ PSI), filling a tank doesn't hurt
-   anything.
+5. Pressure-tolerant: even if the regulator fails high, the tank can't be over-pressurized (it's
+   vented). Worst case is float-valve hammering / chatter and accelerated float-seat wear, which is
+   loud and obvious — not a silent flood.
 
 ## Pre-flight: verify source-water hardness
 
@@ -90,8 +92,11 @@ BoM before going further.
 
 ## Bill of materials
 
-All threads on the espresso side are **BSP, not NPT**. Single-use fiber washers on every joint that
-gets disassembled.
+Note: this plan does **not** thread into the espresso machine itself (no boiler-side BSP joints) —
+all connections are on the supply line between the Aquasana output and the reservoir float valve,
+which is push-to-connect / compression / 1/4" male thread. So BSP vs NPT only matters if a part spec
+says it (e.g. a regulator's port threading); double-check thread standard before buying. Use
+single-use fiber washers on any tapered-thread joint that gets disassembled.
 
 | #   | Item                                       | Spec                                                                | Notes                                                                                                |
 | --- | ------------------------------------------ | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
