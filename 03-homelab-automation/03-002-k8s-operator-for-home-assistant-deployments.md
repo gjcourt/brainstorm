@@ -4,7 +4,7 @@ number: '03-002'
 category: 'homelab-automation'
 difficulty: 'Hard'
 time_commitment: 'Months'
-target_skills: 'Go, Kubernetes API, Operator SDK'
+target_skills: 'Go, Kubernetes API, kubebuilder / Operator SDK, controller-runtime'
 status: 'Not Started'
 depends_on:
   - homelab/home-assistant
@@ -43,8 +43,10 @@ mDNS reflector DaemonSet for LAN discovery.
 - [ ] Operator deployed via Helm chart committed to homelab GitOps repo (Flux reconciles it)
 - [ ] Existing HA instance migrated from manual Helm/Flux config to operator-managed
       `HomeAssistantInstance` CR
-- [ ] End-to-end test documented: delete CR + PVC, re-apply CR, verify HA starts with restored
-      config and data
+- [ ] End-to-end test documented: delete CR + PVC, re-apply CR _plus_ a `HomeAssistantRestore`
+      pointing at the most recent backup, verify HA starts with restored config and data
+      (auto-restore from latest is explicitly out of scope — restores are always user-driven so the
+      controller cannot silently overwrite a deliberately empty volume)
 
 ## Progress
 
@@ -99,10 +101,10 @@ mDNS reflector DaemonSet for LAN discovery.
 
 - [ ] Define `BackupSpec` (schedule cron, retention count, destination type, S3/PVC params); if
       Phase 1 picked Velero, this becomes a thin wrapper around a `Schedule` CR instead
-- [ ] Reconcile a CronJob per instance from `BackupSpec` (one CronJob per CR is fine —
-      one-controller-watches-many-CronJobs is a standard pattern)
-- [ ] Implement backup Job image/script: snapshot `/config` (rsync or `tar` from a paused HA, or use
-      a CSI volume snapshot if the storage class supports it), upload to S3 or copy to PVC
+- [ ] Reconcile the chosen backup driver per instance: CronJob+Job (operator-owned), a Velero
+      `Schedule` (if Phase 1 picked Velero), or a periodic `VolumeSnapshot` reconciler
+- [ ] If self-owned: implement the backup Job image/script — snapshot `/config` (rsync or `tar` from
+      a paused HA, or a CSI volume snapshot), upload to S3 or copy to PVC
 - [ ] Store backup metadata (timestamp, size, location, source-instance UID) in `.status.backups[]`
 - [ ] Define a `HomeAssistantRestore` CR (or `spec.restore: { source, completed }` block) that the
       reconciler consumes to drive a pre-start init container which downloads + extracts the
