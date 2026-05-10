@@ -34,7 +34,7 @@ modification.
 
 ## Approach: reservoir float-fill
 
-```
+```text
 [Aquasana Claryum output, 1/4" braided]
         │
         ├─ 1/4" inline shut-off (ball valve) ── for service isolation
