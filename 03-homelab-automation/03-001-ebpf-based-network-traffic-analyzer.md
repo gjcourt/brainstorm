@@ -5,7 +5,7 @@ category: 'homelab-automation'
 difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'C, eBPF, Go, Linux Kernel (optional: Rust userspace)'
-status: 'Not Started'
+status: 'In Progress'
 depends_on:
   - homelab/prometheus
   - homelab/talos
@@ -73,8 +73,8 @@ CO-RE relocations, and the userspace BPF loader stack.
 ┌─────────────────── Talos node ───────────────────────────────┐
 │                                                                │
 │  Kernel hooks:                                                 │
-│    TC clsact ingress  (eth0)  ── packet/byte counters         │
-│    TC clsact egress   (eth0)  ── packet/byte counters         │
+│    tcx ingress  (eno1) ── packet/byte counters [HEAD anchor]  │
+│    tcx egress   (eno1) ── packet/byte counters                │
 │    fentry tcp_retransmit_skb  ── retransmit counter           │
 │    fentry tcp_rcv_established ── RTT histogram                │
 │    kprobe udp_sendmsg :53     ── DNS query timing ringbuf     │
@@ -117,52 +117,70 @@ skill, and C + libbpf is the canonical kernel-side BPF path).
 Talos is an immutable-OS distribution; kernel-side BPF runs in userspace pods, but the deployment
 model has more constraints than a generic Linux host. Items to validate in Phase 0:
 
-- **BTF availability** — `/sys/kernel/btf/vmlinux` must exist on every node. Required for CO-RE.
-- **Kernel version** — Talos v1.12.4 ships kernel 6.x (verify exact version on cluster); confirm
-  `fentry`/`fexit` and ringbuf are available.
-- **Capabilities** — pod needs `CAP_BPF`, `CAP_PERFMON`, `CAP_NET_ADMIN`. `CAP_SYS_ADMIN` may be
-  required for some attach paths on older kernels; prefer narrower caps if possible.
+- **BTF availability** — `/sys/kernel/btf/vmlinux` must exist on every node. Required for CO-RE. ✅
+  Confirmed present on all 6 nodes during Phase 0.
+- **Kernel version** — Talos v1.12.4 ships kernel **6.18.9-talos** across all 6 nodes (verified
+  Phase 0). Comfortably past the floor for `fentry`/`fexit` (5.5+), ringbuf (5.8+), and tcx (6.6+).
+- **Capabilities** — pod needs `CAP_BPF`, `CAP_PERFMON`, `CAP_NET_ADMIN`, **and `CAP_SYS_ADMIN`**.
+  Phase 0 surfaced that `CAP_SYS_ADMIN` is required for `bpf(BPF_PROG_GET_NEXT_ID)`, which the agent
+  uses at startup to discover Cilium's program for tcx anchor placement (see Phase 0 Findings).
+  Kernel gates this on `CAP_SYS_ADMIN` regardless of `CAP_BPF`.
+- **Seccomp** — pin to `seccompProfile.type: RuntimeDefault`. `CAP_SYS_ADMIN` widens the syscall
+  surface; the kubelet default seccomp filter is essentially free hardening.
 - **Pod Security Admission** — namespace must be labeled
   `pod-security.kubernetes.io/enforce=privileged`. PSA `restricted` blocks `hostNetwork` and
   elevated caps.
 - **Filesystem** — `/sys/fs/bpf` mounted into the pod (hostPath) for pinned maps; `/sys/kernel/btf`
   read-only for BTF access.
 - **`hostNetwork: true`** required to attach to physical interfaces.
-- **Cilium coexistence** — Cilium attaches its own TC programs via clsact. Multiple programs can
-  attach to the same hook; verify ordering with `bpftool net show dev <iface>` on stage and document
-  the resulting attach order in the README.
+- **Cilium coexistence** — Cilium 1.19 uses **tcx** (not classic TC clsact, despite this plan's
+  original wording). Multi-program attachment is the design intent of tcx — coexistence is
+  structural, not a workaround. **However:** `link.Head()` (sets `BPF_F_BEFORE` without a target)
+  did **not** take effect on this kernel/Cilium combination — our program landed at the chain tail
+  even with that flag, so a head-anchored counter saw 0 bytes. The working pattern is to enumerate
+  loaded programs at startup, find Cilium's by name (`cil_from_netdev`), and attach with
+  `link.BeforeProgramByID(id)`. Verify chain order with `bpftool net show dev <iface>` (works via
+  the cilium-agent pod's `bpftool`).
 - **SOPS / GitOps** — per repo convention, secret-bearing manifests land as draft PRs with
   `.yaml.example` templates and CI is the gate. This project should not need secrets, but if a
   scrape-auth token is added, it follows that flow.
 
 ## Progress
 
-### Phase 0 — Feasibility Spike (≈1 week)
+### Phase 0 — Feasibility Spike (≈1 week) — ✅ Closed 2026-05-10
 
 Prove the riskiest assumptions on a single staging node before committing.
 
-- [ ] Verify `/sys/kernel/btf/vmlinux` exists on a Talos worker node
-- [ ] Build a minimal C BPF program (TC ingress, byte counter) with `clang -target bpf` against a
-      Talos-pinned `vmlinux.h`
-- [ ] Build a minimal Go loader using `cilium/ebpf` that loads the program, attaches to a single
-      interface, reads the map, prints to stdout
-- [ ] Run the loader as a `Pod` (not yet a DaemonSet) in a privileged staging namespace; confirm
-      attachment with `bpftool prog list` via `nsenter` or talosctl debug
-- [ ] Confirm Cilium does not block the additional TC attach; document program ordering
-- [ ] **Decision gate:** if any of the above fail and cannot be resolved within the spike, kill the
-      project and write the postmortem
+- [x] Verify `/sys/kernel/btf/vmlinux` exists on a Talos worker node — confirmed on all 6 nodes
+- [x] Build a minimal C BPF program (tcx ingress byte counter) with `clang -target bpf`. (Did not
+      need `vmlinux.h` for the hello-world — used `<linux/bpf.h>` + `<bpf/bpf_helpers.h>`. CO-RE +
+      `vmlinux.h` deferred to Phase 2 where we touch kernel structs.)
+- [x] Build a minimal Go loader using `cilium/ebpf` that loads the program, attaches via
+      `link.AttachTCX`, reads the map, exposes `/metrics`
+- [x] Run the loader as a DaemonSet in a privileged staging namespace; confirm attachment with
+      `bpftool net show dev eno1` via the cilium-agent pod's bundled bpftool
+- [x] Confirm Cilium does not block the additional tcx attach; document program ordering —
+      `count_rx` anchored ahead of `cil_from_netdev` via `link.BeforeProgramByID`
+- [x] **Decision gate:** PASSED. `netscope_rx_bytes_total{iface="eno1"}` increments visibly within
+      seconds; counter went 2.95 → 4.33 MB over 10s under steady-state load. Project proceeds.
 
-### Phase 1 — DaemonSet Skeleton (≈2 weeks)
+### Phase 1 — DaemonSet Skeleton (≈2 weeks) — In Progress
 
-- [ ] Create new repo `gjcourt/netscope` (or naming TBD); decide layout: `bpf/` (C source),
-      `cmd/agent/` (Go), `deploy/` (Helm chart)
-- [ ] CI: `make build` produces `.o` via clang and Go binary; cross-builds for amd64 (homelab is
-      x86)
-- [ ] DaemonSet manifest with correct caps, hostNetwork, hostPath mounts, PSA label
-- [ ] Single packet-counter metric exposed at `/metrics` per node
-- [ ] Helm chart published in repo; Flux Kustomization PR opened against `gjcourt/homelab` for stage
-      overlay only
+- [x] Create new repo `gjcourt/netscope` (Apache 2.0, public). Layout: `internal/bpf/src/` (C source
+      — outside any Go package so `go vet` doesn't trip on cgo detection), `internal/bpf/embed.go`
+      (`go:embed` of the compiled .o), `cmd/agent/` (Go), `deploy/` (raw manifests +
+      `helm/netscope/` chart)
+- [x] CI on GitHub Actions (amd64-native; QEMU emulation on arm64 Macs hits Go asm segfaults).
+      `lint` job: `clang` + `make bpf`, then `gofmt`, `go vet`, `go mod tidy` diff, `helm lint`,
+      `helm template`. `image` job: multi-stage Dockerfile, push to
+      `ghcr.io/gjcourt/netscope:{branch,sha}`. Public package.
+- [x] DaemonSet manifest with correct caps, hostNetwork, hostPath mounts, PSA label, seccomp
+- [x] Single packet-counter metric (`netscope_rx_bytes_total{iface}`) exposed at `/metrics`
+- [x] Helm chart in `deploy/helm/netscope/` with values for image, iface, nodeSelector,
+      capabilities, resources, probes, seccomp
+- [ ] Flux Kustomization / HelmRelease PR opened against `gjcourt/homelab` for stage overlay only
 - [ ] Stage Prometheus scraping the new agent; one Grafana panel showing per-node packet rate
+- [ ] Roll out to all 3 stage nodes (currently pinned to `talos-18u-ski` only); 24-hour soak
 - [ ] **Validation:** rollout to all 3 stage nodes succeeds; agent pods stable for 24 hours
 
 ### Phase 2 — Core Depth Metrics (≈3 weeks)
@@ -222,13 +240,50 @@ Prove the riskiest assumptions on a single staging node before committing.
 | Maintenance burden post-build (kernel upgrades, BPF API churn)         | Postmortem in Phase 4 includes explicit kill-or-continue recommendation; project is allowed to be archived as a learning artifact |
 | Userspace memory growth from in-flight DNS query table                 | TTL eviction in agent; bounded map size in BPF; alert if eviction count climbs                                                    |
 
+## Phase 0 Findings
+
+Surfaces during the spike that materially altered the plan:
+
+1. **Cilium 1.19 uses `tcx`, not classic TC clsact.** The original architecture text was wrong about
+   this. Updated above. Multi-program attachment is the explicit design of tcx — coexistence is
+   structural, not a workaround.
+2. **Physical interface is `eno1`, not `eth0`.** Predictable Network Interface Naming. Configurable
+   via `NETSCOPE_IFACE` env (default `eno1`); Phase 1 should switch to default-route discovery so
+   the agent works on heterogeneous hardware without per-host config.
+3. **`link.Head()` does not actually anchor at head.** cilium/ebpf v0.18's `Head()` sets
+   `BPF_F_BEFORE` with no relative target, which the kernel docs say should mean "first" — but
+   empirically on Talos kernel 6.18.9 with Cilium present, our program still landed at the tail
+   (counter stayed at 0 across hundreds of MB/s of traffic). The working pattern: enumerate programs
+   via `BPF_PROG_GET_NEXT_ID`, find `cil_from_netdev` by name, attach with
+   `link.BeforeProgramByID(id)`. Resolved fresh at each pod start since program IDs change across
+   `cilium-agent` restarts.
+4. **`CAP_SYS_ADMIN` is required for program enumeration.** Kernel gates `BPF_PROG_GET_NEXT_ID` on
+   `CAP_SYS_ADMIN` regardless of `CAP_BPF`. Added to the cap set; mitigated with
+   `seccompProfile: RuntimeDefault`.
+5. **Don't build BPF images from arm64 Macs via Docker.** QEMU emulation segfaults Go's asm tool
+   when cross-building amd64. GitHub Actions on amd64 runners is the right path.
+6. **Talos kernel was the easy part.** 6.18.9 has every BPF feature this project will need. The
+   constraints were entirely Kubernetes-side (PSA, capabilities, seccomp).
+
 ## Open Questions
 
-- **Repo placement** — new top-level repo `gjcourt/netscope`, or subdirectory in `gjcourt/homelab`?
-  Recommendation: new repo (different lifecycle, different toolchain — C + clang + Go).
-- **Naming** — `netscope`, `nettrace`, `kprobe-exporter`, something else?
-- **Image build** — multi-stage Dockerfile with clang in builder stage; final image scratch or
-  distroless? `ghcr.io/gjcourt/netscope` per homelab convention.
-- **Metric prefix** — `netscope_*` or follow `node_*` convention from node_exporter?
+- **Default-route interface discovery** — Phase 1 should replace the hardcoded `eno1` default with
+  runtime discovery (read `/proc/net/route` or netlink). Trivial; just hasn't happened yet.
+- **Anchoring against multi-NIC hosts** — `findProgramByName` returns the first match by name; on
+  hosts where Cilium has loaded multiple `cil_from_netdev` instances (one per ifindex), we may
+  anchor against the wrong one. Single-target stage node makes this moot for now. Phase 1+ should
+  filter by ifindex via attach inspection.
+- **Stale image cache from `imagePullPolicy: IfNotPresent` + floating `:main` tag** — restarted pods
+  cache the old image SHA. Either pin to `:<short-sha>` (Flux can do this from upstream image
+  policies) or set `imagePullPolicy: Always` for the floating tag. Flux integration in Phase 1
+  should resolve this properly.
 - **Phase 5 commitment** — is per-pod attribution a real requirement or a learning curiosity? It is
   the single largest piece of post-v1 work and should be decided before Phase 4 closes.
+
+### Resolved during Phase 0
+
+- ~~Repo placement~~ → New top-level `gjcourt/netscope` (public, Apache 2.0).
+- ~~Naming~~ → `netscope`.
+- ~~Image build~~ → Multi-stage Dockerfile, clang+golang builder,
+  `gcr.io/distroless/static-debian12` runtime. Published to `ghcr.io/gjcourt/netscope` (public).
+- ~~Metric prefix~~ → `netscope_*`.
