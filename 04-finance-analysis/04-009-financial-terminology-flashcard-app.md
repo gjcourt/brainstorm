@@ -263,11 +263,15 @@ Response:
 ```
 
 Wire format is camelCase per-entity `id` (`id` for cardStates/collections, `cardId` for reviews);
-the server maps to the snake_case DB columns below. Client persists `response.now` as the next
-`since` value; first sync uses `since: 0`.
+the server maps to the snake_case DB columns below. `Collection.createdAt` is client-only display
+metadata and is not synced (it's reconstructable from local creation; `updatedAt` drives LWW).
+Client persists `response.now` as the next `since` value; first sync uses `since: 0`.
 
-**Limits.** Soft cap of 5000 mutations per request; the server returns `truncated: true` and the
-client immediately re-syncs with the new `since` watermark until `truncated` is `false`.
+**Limits.** Per-array cap of 5000 rows in either direction. On response: if any of `cardStates` /
+`collections` / `reviews` would exceed 5000 rows, the server truncates that array to the first 5000
+sorted by `updatedAt` (or `ratedAt` for reviews) ascending, sets `truncated: true`, and the client
+immediately re-syncs with `since = max(updatedAt | ratedAt) of the returned rows` until `truncated`
+is `false`. On request: the client batches its outgoing queue into ≤5000 mutations per call.
 
 #### Conflict resolution
 
@@ -288,9 +292,12 @@ client immediately re-syncs with the new `since` watermark until `truncated` is 
   - every 60s via `setInterval`
   - on `document.visibilitychange` when visible
 - Mutation queue persisted in localStorage at `flashcards:sync-queue` so mutations made offline are
-  durable.
+  durable. `cardStates` and `collections` entries are coalesced by `id` (latest local write wins
+  before sending); `reviews` are append-only (every rating event queued, even repeats on the same
+  card).
 - Last-sync timestamp persisted at `flashcards:last-sync-at`.
-- After successful sync, queue is cleared and `last-sync-at` is updated to `response.now`.
+- Reconcile order on response: apply response rows over local state (LWW comparison on the client
+  using the same rules below), **then** clear the queue and update `last-sync-at` to `response.now`.
 - Failed sync (network error, 5xx) leaves the queue intact for retry.
 - A small `<SyncStatus>` indicator in `<Layout>` shows offline/online + "synced 2m ago" / "syncing…"
   / "error".
@@ -327,7 +334,7 @@ CREATE INDEX reviews_user_rated ON reviews (user_id, rated_at);
 - Whether to use logical clocks / vector clocks for stricter cross-device causal ordering (defer;
   LWW is sufficient for single-user).
 - Whether to add a "reset device" button that re-pulls from server, blowing away local state
-  (probably yes; can add in M3).
+  (probably yes; can add in milestone 3, Client integration).
 - Multi-user mode auth specifics — when needed, what claim to trust.
 
 ## Card list — financial deck (Phase 2 reference)
