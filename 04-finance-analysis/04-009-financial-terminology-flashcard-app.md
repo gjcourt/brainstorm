@@ -24,7 +24,8 @@ Three usage patterns drive the design:
 3. **Study these N things** — save a named **collection** of decks (e.g.
    `interview-prep = [nato, latency, acronyms]`) and review the merged due queue
 
-Local-first (no backend). Single-deck mini-deploys via build-time env flag.
+Local-first; sync backend optional (see Phase 7 — offline always works). Single-deck mini-deploys
+via build-time env flag.
 
 ## Stack (locked)
 
@@ -254,21 +255,31 @@ Response:
 ```json
 {
   "now": 1715000060000,
-  "cardStates": [...everything updated since `since`...],
-  "collections": [...],
-  "reviews": [...]
+  "cardStates": [{ "id": "nato:a", "fsrs": {...}, "updatedAt": 1715... }],
+  "collections": [{ "id": "iv", "name": "...", "deckIds": [...], "updatedAt": 1715..., "deletedAt": null }],
+  "reviews":     [{ "cardId": "nato:a", "ratedAt": 1715..., "rating": 3 }],
+  "truncated": false
 }
 ```
 
+Wire format is camelCase per-entity `id` (`id` for cardStates/collections, `cardId` for reviews);
+the server maps to the snake_case DB columns below. Client persists `response.now` as the next
+`since` value; first sync uses `since: 0`.
+
+**Limits.** Soft cap of 5000 mutations per request; the server returns `truncated: true` and the
+client immediately re-syncs with the new `since` watermark until `truncated` is `false`.
+
 #### Conflict resolution
 
-- **Card states** — LWW per card based on `last_review` timestamp (or `updated_at` if `last_review`
-  is null because the card was created not rated). New-card state with no `last_review` is implicit
-  — server-side null `last_review` rows never win over a row with a non-null one.
+- **Card states** — LWW per card based on `fsrs.last_review` timestamp. A non-null `last_review`
+  always beats a null `last_review` (a rated card never loses to a never-rated card). If both sides
+  have null `last_review` (card created but never rated on either device), fall back to comparing
+  `updated_at`. The server reads `last_review` out of the `fsrs` JSONB blob at write time and
+  performs the comparison in app code.
 - **Collections** — LWW per `id` based on `updatedAt`. Deletions are soft via `deletedAt` tombstones
   so they sync. Tombstones expire server-side after 90 days.
 - **Reviews** — append-only log; idempotent insert on `(user_id, card_id, rated_at)` primary key.
-  Conflicts are no-ops.
+  Duplicate inserts are no-ops; no conflict resolution needed because the tuple is content-derived.
 
 #### Client sync model
 
@@ -283,6 +294,8 @@ Response:
 - Failed sync (network error, 5xx) leaves the queue intact for retry.
 - A small `<SyncStatus>` indicator in `<Layout>` shows offline/online + "synced 2m ago" / "syncing…"
   / "error".
+- The existing local `flashcards:reviews` cap of 1000 entries stays in place (it backs the local
+  streak/stats UI only); the server `reviews` table retains the full history.
 
 #### DB schema
 
@@ -298,15 +311,16 @@ CREATE INDEX reviews_user_rated ON reviews (user_id, rated_at);
 
 #### Rollout milestones
 
-1. **This PR** — plan documented in brainstorm
-2. **Sync service skeleton** (gjcourt/flashcards) — `server/` subdir, Hono app, migrations,
-   `Dockerfile.sync`, `image-sync.yml`, unit tests. Image published to
+1. **This PR** (gjcourt/brainstorm) — plan documented.
+2. **Sync service skeleton** (gjcourt/flashcards) — `server/` subdir, Hono app, kysely-migrate
+   migrations, `Dockerfile.sync`, `image-sync.yml`, unit tests. Image published to
    `ghcr.io/gjcourt/flashcards-sync`.
 3. **Client integration** (gjcourt/flashcards) — `useSync` hook, mutation queue, reconcile logic,
    `<SyncStatus>` indicator.
 4. **Homelab deploy** (gjcourt/homelab) — `apps/base/flashcards-sync/`, CNPG cluster, second
    HTTPRoute path rule.
-5. **Image tag bump** to roll out.
+5. **Image tag bump** (gjcourt/homelab) — bump `image-sync.yml`-published tag in the homelab
+   manifest to roll the service out.
 
 #### Open design questions (call out, don't decide)
 
