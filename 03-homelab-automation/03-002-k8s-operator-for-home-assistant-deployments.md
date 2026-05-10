@@ -22,15 +22,24 @@ access.
 ## Exit Criteria
 
 - [ ] `HomeAssistantInstance` CRD installed in cluster; `kubectl get homeassistantinstances` works
-- [ ] Controller reconciles a `HomeAssistantInstance` CR to a running HA Pod/Deployment with correct config
-- [ ] Automated backup: each instance spec includes a backup schedule (cron); operator creates/manages a CronJob that tars the HA config dir and stores to a configured S3 bucket or PVC
-- [ ] Backup restore: annotating an instance with `ha-operator/restore: latest` (or a specific backup name) triggers restore from backup before HA pod starts
-- [ ] Config injection: a referenced ConfigMap drives HA `configuration.yaml`; changes to the ConfigMap trigger a rolling restart of HA
-- [ ] Sidecar proxy: operator injects an optional mDNS proxy sidecar (configurable via spec field) for local network discovery without exposing HA directly
-- [ ] `.status` subresource: phase field reflects `Pending / Running / BackupInProgress / Degraded`; last backup timestamp and backup count exposed
+- [ ] Controller reconciles a `HomeAssistantInstance` CR to a running HA Pod/Deployment with correct
+      config
+- [ ] Automated backup: each instance spec includes a backup schedule (cron); operator
+      creates/manages a CronJob that tars the HA config dir and stores to a configured S3 bucket or
+      PVC
+- [ ] Backup restore: annotating an instance with `ha-operator/restore: latest` (or a specific
+      backup name) triggers restore from backup before HA pod starts
+- [ ] Config injection: a referenced ConfigMap drives HA `configuration.yaml`; changes to the
+      ConfigMap trigger a rolling restart of HA
+- [ ] Sidecar proxy: operator injects an optional mDNS proxy sidecar (configurable via spec field)
+      for local network discovery without exposing HA directly
+- [ ] `.status` subresource: phase field reflects `Pending / Running / BackupInProgress / Degraded`;
+      last backup timestamp and backup count exposed
 - [ ] Operator deployed via Helm chart committed to homelab GitOps repo (Flux reconciles it)
-- [ ] Existing HA instance migrated from manual Helm/Flux config to operator-managed `HomeAssistantInstance` CR
-- [ ] End-to-end test documented: delete CR + PVC, re-apply CR, verify HA starts with restored config and data
+- [ ] Existing HA instance migrated from manual Helm/Flux config to operator-managed
+      `HomeAssistantInstance` CR
+- [ ] End-to-end test documented: delete CR + PVC, re-apply CR, verify HA starts with restored
+      config and data
 
 ## Progress
 
@@ -38,7 +47,8 @@ access.
 
 - [ ] Audit current HA deployment in homelab repo (Helm chart, volume layout, config structure)
 - [ ] Compare controller-runtime vs Operator SDK; document choice and rationale
-- [ ] Design `HomeAssistantInstance` CRD spec (fields: image, configMapRef, backup spec, proxy spec, storage)
+- [ ] Design `HomeAssistantInstance` CRD spec (fields: image, configMapRef, backup spec, proxy spec,
+      storage)
 - [ ] Design backup storage interface (abstract over S3 and PVC backends)
 - [ ] Write Architecture Decision Record (ADR) for operator design
 
