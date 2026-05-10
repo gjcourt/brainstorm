@@ -1,4 +1,4 @@
-# Coffee & Espresso Projects (10)
+# Coffee & Espresso Projects (11)
 
 This category focuses on espresso profiling, the Lucca A53 Mini, `leva!` firmware, and sensor
 integration.
@@ -17,3 +17,4 @@ integration.
 | 06-008 | [Roasting Profile Logger](06-008-roasting-profile-logger.md)                                         | Not Started | Medium     | 1-4 weeks       |
 | 06-009 | [Pump Pressure Transducer Retrofit](06-009-pump-pressure-transducer-retrofit.md)                     | Not Started | Hard       | Months          |
 | 06-010 | [Grouphead Temperature Sensor](06-010-grouphead-temperature-sensor.md)                               | Not Started | Medium     | 1-4 weeks       |
+| 06-011 | [Mini V2 Direct Plumb-In](06-011-mini-v2-direct-plumb-in.md)                                         | Not Started | Easy       | 1-2 days        |
