@@ -4,7 +4,7 @@ number: '04-009'
 category: 'finance-analysis'
 difficulty: 'Easy'
 time_commitment: '1-2 days'
-target_skills: 'React Native/Flutter, Spaced Repetition Algorithms'
+target_skills: 'React + TypeScript + Vite, Tailwind, FSRS Spaced Repetition'
 status: 'Not Started'
 depends_on: []
 ---
@@ -13,8 +13,21 @@ depends_on: []
 
 ## Description
 
-Build a simple mobile or web app using a spaced repetition algorithm (like SuperMemo-2) to memorize
-complex financial terminology, accounting principles, and valuation formulas.
+Build a web app using the FSRS-4.5 spaced repetition algorithm to memorize complex financial
+terminology, accounting principles, and valuation formulas. Local-first (no backend) with optional
+GitHub Pages deploy.
+
+## Stack (locked)
+
+- **Build:** Vite + React + TypeScript
+- **Scheduling:** [`ts-fsrs`](https://github.com/open-spaced-repetition/ts-fsrs) (FSRS-4.5 reference
+  implementation — do not reimplement)
+- **Styling:** Tailwind CSS; dark mode via `prefers-color-scheme`
+- **State:** `useReducer` (escalate to Zustand only if prop drilling exceeds 3 levels)
+- **Animation:** plain CSS 3D transform for the card flip (no Framer Motion)
+- **Tests:** Vitest
+- **Persistence:** `localStorage` (no backend)
+- **Deploy (stretch):** GitHub Pages
 
 ## Exit Criteria
 
@@ -76,6 +89,8 @@ complex financial terminology, accounting principles, and valuation formulas.
 - [ ] `useDueQueue` hook: derives sorted queue from deck state — overdue cards first (FSRS
       retrievability already reflects the gap), then today's new cards; memoised to avoid re-sorting
       on every render
+- [ ] Deck state managed via `useReducer`; rating dispatches a `RATE_CARD` action that calls
+      `ts-fsrs` and persists in the same reducer step
 - [ ] Wire persistence: call `saveDeck` after every rating so refreshing the page restores progress
 
 ### Phase 4 – Progress Dashboard & Polish
@@ -84,8 +99,7 @@ complex financial terminology, accounting principles, and valuation formulas.
       total cards, mastery-level breakdown displayed as a simple bar or table
 - [ ] Category filter: tab or dropdown to browse cards by category (equities / accounting /
       valuation / fixed income) independent of the review session
-- [ ] Apply clean default styling (CSS Modules or Tailwind; dark-mode via `prefers-color-scheme`
-      media query)
+- [ ] Apply Tailwind styling; dark mode via `prefers-color-scheme` (no class-based toggle)
 - [ ] Write `README.md`: project description, `npm install && npm run dev` quickstart, how FSRS
       scheduling works (stability, retrievability, decay), deck seed format
 
