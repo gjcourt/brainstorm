@@ -24,7 +24,8 @@ Three usage patterns drive the design:
 3. **Study these N things** — save a named **collection** of decks (e.g.
    `interview-prep = [nato, latency, acronyms]`) and review the merged due queue
 
-Local-first (no backend). Single-deck mini-deploys via build-time env flag.
+Local-first; sync backend optional (see Phase 7 — offline always works). Single-deck mini-deploys
+via build-time env flag.
 
 ## Stack (locked)
 
@@ -208,6 +209,136 @@ Each phase ships as its own PR against `gjcourt/flashcards`.
 - [ ] Two CI workflows: `deploy-multi.yml` (default build) and `deploy-nato.yml`
       (`VITE_LOCKED_DECK=nato`); deploy to `gh-pages` branch under different paths
 - [ ] Add public URLs to README
+
+### Phase 7 — Cross-device sync (post-MVP)
+
+App is live at `https://flashcards.burntbytes.com/` with 286 cards across 9 decks. All state still
+lives in browser `localStorage` only (`flashcards:cards`, `flashcards:collections`,
+`flashcards:reviews`). Phase 7 adds a sync service that mirrors localStorage to a Postgres DB so
+state follows the user across devices, while keeping the app local-first and offline-capable.
+
+#### Architecture
+
+- **Same-repo monorepo-ish layout** in `gjcourt/flashcards`: add `server/` subdir with its own
+  `package.json` for the sync service. Existing React app stays at the root, untouched.
+- **Stack:** Node 22 + Hono (HTTP) + pg + kysely (typed queries) + zod (request validation). Vitest
+  for tests.
+- **DB:** New CNPG cluster `flashcards-db` in the homelab, mirroring overture's pattern (iSCSI PVC,
+  3 replicas, scheduled backup to S3-compatible store).
+- **Routing:** Cilium HTTPRoute on `flashcards.burntbytes.com` gains a second path rule: `/api/*` →
+  sync service:8080; everything else → existing web service:8080. Single hostname, no DNS changes,
+  no CORS.
+- **Auth:** default **single-user mode** — env var `SINGLE_USER_ID=george` skips auth and uses that
+  ID. Trusts the edge gateway (CF Access) to gate. Multi-user mode (`AUTH_MODE=jwt`) validates
+  `CF-Access-Jwt-Assertion` header and derives `user_id` from `email` claim. Documented as a
+  follow-up for reusability.
+
+#### Sync protocol
+
+One endpoint: `POST /api/sync`
+
+Request:
+
+```json
+{
+  "since": 1715000000000,
+  "mutations": {
+    "cardStates": [{ "id": "nato:a", "fsrs": {...} }],
+    "collections": [{ "id": "iv", "name": "...", "deckIds": [...], "updatedAt": 1715..., "deletedAt": null }],
+    "reviews":     [{ "cardId": "nato:a", "ratedAt": 1715..., "rating": 3 }]
+  }
+}
+```
+
+Response:
+
+```json
+{
+  "now": 1715000060000,
+  "cardStates": [{ "id": "nato:a", "fsrs": {...}, "updatedAt": 1715... }],
+  "collections": [{ "id": "iv", "name": "...", "deckIds": [...], "updatedAt": 1715..., "deletedAt": null }],
+  "reviews":     [{ "cardId": "nato:a", "ratedAt": 1715..., "rating": 3 }],
+  "truncated": false
+}
+```
+
+Wire format is camelCase per-entity `id` (`id` for cardStates/collections, `cardId` for reviews);
+the server maps to the snake_case DB columns below. `Collection.createdAt` is client-only display
+metadata and is not synced (it's reconstructable from local creation; `updatedAt` drives LWW).
+Client persists `response.now` as the next `since` value; first sync uses `since: 0`.
+
+**Limits.** Per-array cap of 5000 rows in either direction. On response: if any of `cardStates` /
+`collections` / `reviews` would exceed 5000 rows, the server truncates that array to the first 5000
+sorted by `updatedAt` (or `ratedAt` for reviews) ascending, sets `truncated: true`, and the client
+immediately re-syncs with `since = max(updatedAt | ratedAt) of the returned rows` until `truncated`
+is `false`. On request: the client batches its outgoing queue into ≤5000 mutations per call.
+
+#### Conflict resolution
+
+Rules are symmetric — applied the same way on both the server (against incoming mutations) and the
+client (against response rows). For each `id`, keep the row with the greater comparison key:
+
+- **Card states** — comparison key is `(fsrs.last_review, updated_at)` compared lexicographically,
+  with non-null `last_review` always greater than null `last_review` (a rated card never loses to a
+  never-rated card). If both sides have null `last_review` (card created but never rated on either
+  device), the `updated_at` tiebreaker decides. The server reads `last_review` out of the `fsrs`
+  JSONB blob at write time and performs the comparison in app code.
+- **Collections** — comparison key is `updatedAt`. Deletions are soft via `deletedAt` tombstones so
+  they sync. Tombstones expire server-side after 90 days.
+- **Reviews** — append-only log; idempotent insert on `(user_id, card_id, rated_at)` primary key.
+  Duplicate inserts are no-ops; no conflict resolution needed because the tuple is content-derived.
+
+#### Client sync model
+
+- New `useSync` hook in `state.tsx`. Runs:
+  - on startup
+  - every 60s via `setInterval`
+  - on `document.visibilitychange` when visible
+- Mutation queue persisted in localStorage at `flashcards:sync-queue` so mutations made offline are
+  durable. `cardStates` and `collections` entries are coalesced by `id` (latest local write wins
+  before sending); `reviews` are append-only (every rating event queued, even repeats on the same
+  card).
+- Last-sync timestamp persisted at `flashcards:last-sync-at`.
+- Reconcile order on response: apply response rows over local state (LWW comparison on the client
+  using the same rules below), **then** clear the queue and update `last-sync-at` to `response.now`.
+- Failed sync (network error, 5xx) leaves the queue intact for retry.
+- A small `<SyncStatus>` indicator in `<Layout>` shows offline/online + "synced 2m ago" / "syncing…"
+  / "error".
+- The existing local `flashcards:reviews` cap of 1000 entries stays in place (it backs the local
+  streak/stats UI only); the server `reviews` table retains the full history.
+
+#### DB schema
+
+```sql
+CREATE TABLE card_states  (user_id TEXT, card_id TEXT, fsrs JSONB, updated_at TIMESTAMPTZ DEFAULT now(), PRIMARY KEY (user_id, card_id));
+CREATE TABLE collections  (user_id TEXT, collection_id TEXT, data JSONB, updated_at TIMESTAMPTZ DEFAULT now(), deleted_at TIMESTAMPTZ NULL, PRIMARY KEY (user_id, collection_id));
+CREATE TABLE reviews      (user_id TEXT, card_id TEXT, rated_at TIMESTAMPTZ, rating SMALLINT, PRIMARY KEY (user_id, card_id, rated_at));
+
+CREATE INDEX card_states_user_updated ON card_states (user_id, updated_at);
+CREATE INDEX collections_user_updated ON collections (user_id, updated_at);
+CREATE INDEX reviews_user_rated ON reviews (user_id, rated_at);
+```
+
+#### Rollout milestones
+
+1. **This PR** (gjcourt/brainstorm) — plan documented.
+2. **Sync service skeleton** (gjcourt/flashcards) — `server/` subdir, Hono app, kysely-migrate
+   migrations, `Dockerfile.sync`, `image-sync.yml`, unit tests. Image published to
+   `ghcr.io/gjcourt/flashcards-sync`.
+3. **Client integration** (gjcourt/flashcards) — `useSync` hook, mutation queue, reconcile logic,
+   `<SyncStatus>` indicator.
+4. **Homelab deploy** (gjcourt/homelab) — `apps/base/flashcards-sync/`, CNPG cluster, second
+   HTTPRoute path rule.
+5. **Image tag bump** (gjcourt/homelab) — bump `image-sync.yml`-published tag in the homelab
+   manifest to roll the service out.
+
+#### Open design questions (call out, don't decide)
+
+- Whether to use logical clocks / vector clocks for stricter cross-device causal ordering (defer;
+  LWW is sufficient for single-user).
+- Whether to add a "reset device" button that re-pulls from server, blowing away local state
+  (probably yes; can add in milestone 3, Client integration).
+- Multi-user mode auth specifics — when needed, what claim to trust.
 
 ## Card list — financial deck (Phase 2 reference)
 
