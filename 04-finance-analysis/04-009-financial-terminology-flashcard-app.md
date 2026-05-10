@@ -275,13 +275,16 @@ is `false`. On request: the client batches its outgoing queue into ≤5000 mutat
 
 #### Conflict resolution
 
-- **Card states** — LWW per card based on `fsrs.last_review` timestamp. A non-null `last_review`
-  always beats a null `last_review` (a rated card never loses to a never-rated card). If both sides
-  have null `last_review` (card created but never rated on either device), fall back to comparing
-  `updated_at`. The server reads `last_review` out of the `fsrs` JSONB blob at write time and
-  performs the comparison in app code.
-- **Collections** — LWW per `id` based on `updatedAt`. Deletions are soft via `deletedAt` tombstones
-  so they sync. Tombstones expire server-side after 90 days.
+Rules are symmetric — applied the same way on both the server (against incoming mutations) and the
+client (against response rows). For each `id`, keep the row with the greater comparison key:
+
+- **Card states** — comparison key is `(fsrs.last_review, updated_at)` compared lexicographically,
+  with non-null `last_review` always greater than null `last_review` (a rated card never loses to a
+  never-rated card). If both sides have null `last_review` (card created but never rated on either
+  device), the `updated_at` tiebreaker decides. The server reads `last_review` out of the `fsrs`
+  JSONB blob at write time and performs the comparison in app code.
+- **Collections** — comparison key is `updatedAt`. Deletions are soft via `deletedAt` tombstones so
+  they sync. Tombstones expire server-side after 90 days.
 - **Reviews** — append-only log; idempotent insert on `(user_id, card_id, rated_at)` primary key.
   Duplicate inserts are no-ops; no conflict resolution needed because the tuple is content-derived.
 
