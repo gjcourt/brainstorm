@@ -126,7 +126,7 @@ model has more constraints than a generic Linux host. Items to validate in Phase
   uses at startup to discover Cilium's program for tcx anchor placement (see Phase 0 Findings).
   Kernel gates this on `CAP_SYS_ADMIN` regardless of `CAP_BPF`.
 - **Seccomp** — pin to `seccompProfile.type: RuntimeDefault`. `CAP_SYS_ADMIN` widens the syscall
-  surface; the kubelet default seccomp filter is essentially free hardening.
+  surface; the container runtime's default seccomp profile is essentially free hardening.
 - **Pod Security Admission** — namespace must be labeled
   `pod-security.kubernetes.io/enforce=privileged`. PSA `restricted` blocks `hostNetwork` and
   elevated caps.
@@ -242,7 +242,7 @@ Prove the riskiest assumptions on a single staging node before committing.
 
 ## Phase 0 Findings
 
-Surfaces during the spike that materially altered the plan:
+Items surfaced during the spike that materially altered the plan:
 
 1. **Cilium 1.19 uses `tcx`, not classic TC clsact.** The original architecture text was wrong about
    this. Updated above. Multi-program attachment is the explicit design of tcx — coexistence is
@@ -262,8 +262,9 @@ Surfaces during the spike that materially altered the plan:
    `seccompProfile: RuntimeDefault`.
 5. **Don't build BPF images from arm64 Macs via Docker.** QEMU emulation segfaults Go's asm tool
    when cross-building amd64. GitHub Actions on amd64 runners is the right path.
-6. **Talos kernel was the easy part.** 6.18.9 has every BPF feature this project will need. The
-   constraints were entirely Kubernetes-side (PSA, capabilities, seccomp).
+6. **Talos kernel was the easy part.** 6.18.9 has every BPF feature Phase 0 exercised, and the
+   floors for the Phase 2 hooks (`fentry`/`fexit` 5.5+, ringbuf 5.8+, tcx 6.6+) are well behind it.
+   The Phase 0 friction was entirely Kubernetes-side (PSA, capabilities, seccomp).
 
 ## Open Questions
 
