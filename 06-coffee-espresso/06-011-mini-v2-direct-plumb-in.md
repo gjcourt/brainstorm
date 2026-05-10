@@ -5,7 +5,7 @@ category: 'coffee-espresso'
 difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'Water Plumbing, Pressure Regulation, BSP Fittings'
-status: 'Planned'
+status: 'Not Started'
 depends_on:
   - hardware/lucca-a53-mini
 ---
