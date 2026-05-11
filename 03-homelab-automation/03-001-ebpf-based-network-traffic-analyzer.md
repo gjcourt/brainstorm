@@ -51,8 +51,8 @@ CO-RE relocations, and the userspace BPF loader stack.
       stage node showing both Cilium and project programs attached, with documented attach order
 - [ ] Source repository (`gjcourt/netscope` or equivalent) contains: README, architecture doc, build
       instructions, CO-RE / `vmlinux.h` regeneration steps, and Talos-specific deployment notes
-- [ ] Helm chart or Flux Kustomization in `gjcourt/homelab` deploys the DaemonSet via GitOps; stage
-      and prod overlays are distinct
+- [ ] Helm chart or Flux Kustomization in `gjcourt/homelab` deploys the DaemonSet via GitOps;
+      single-cluster homelab so there is one overlay, not a stage/prod split (see Phase 3)
 - [ ] Postmortem document captures: what was learned, what surprised, what would be done
       differently, and an explicit "kill or continue" recommendation for ongoing maintenance
 
@@ -183,31 +183,44 @@ Prove the riskiest assumptions on a single staging node before committing.
 - [ ] Roll out to all 3 stage nodes (currently pinned to `talos-18u-ski` only); 24-hour soak
 - [ ] **Validation:** rollout to all 3 stage nodes succeeds; agent pods stable for 24 hours
 
-### Phase 2 — Core Depth Metrics (≈3 weeks)
+### Phase 2 — Core Depth Metrics (≈3 weeks) — ✅ Closed 2026-05-10
 
-- [ ] `fentry`/`fexit` on `tcp_retransmit_skb` — per-4-tuple retransmit counter
-- [ ] `fentry`/`fexit` on `tcp_rcv_established` — extract `tcp_sock->srtt_us`, populate log2
-      histogram
-- [ ] kprobe on `udp_sendmsg` filtered to dport 53 — emit DNS query event to ringbuf with timestamp
-      and 5-tuple
-- [ ] kprobe on `udp_recvmsg` (or tracepoint equivalent) for matching DNS response — userspace
-      computes RTT
-- [ ] Userspace agent: drain ringbuf, maintain in-flight DNS query table with TTL eviction, compute
-      and export latency histogram
-- [ ] Grafana dashboard: 3 required panels (retransmit rate, SRTT histogram, DNS latency
+- [x] `fentry`/`fexit` on `tcp_retransmit_skb` — per-4-tuple retransmit counter
+- [x] `fentry`/`fexit` on `tcp_rcv_established` — extract `tcp_sock->srtt_us`, populate log2
+      histogram (three verifier iterations; see Phase 2 Findings)
+- [x] kprobe on `udp_sendmsg` filtered to dport 53 — emit DNS query event to ringbuf with timestamp
+      and 5-tuple (in-kernel correlation chosen over ringbuf; see Phase 2 Findings)
+- [x] kprobe on `udp_recvmsg` (or tracepoint equivalent) for matching DNS response — userspace
+      computes RTT (replaced with in-kernel hashmap correlation; userspace just scrapes the latency
+      histogram)
+- [x] ~~Userspace agent: drain ringbuf, maintain in-flight DNS query table with TTL eviction,
+      compute and export latency histogram~~ — superseded by in-kernel hashmap correlation;
+      userspace only scrapes the histogram map (see Phase 2 Findings)
+- [x] Grafana dashboard: 3 required panels (retransmit rate, SRTT histogram, DNS latency
       percentiles)
-- [ ] **Validation:** all 3 panels show plausible data on stage for 48 hours; no verifier load
-      failures across 3 stage nodes
+- [x] **Validation:** all 5 BPF programs (1 tcx + 4 fentry/fexit) attached cleanly on every one of
+      the 6 Talos nodes; observed signal: retransmits ~625/10 min cluster-wide (non-uniform across
+      peers), SRTT p50 ~2 ms / p99 ~734 ms, DNS p50 ~816 µs / p95 ~115 ms / p99 ~845 ms
 
-### Phase 3 — Production Rollout (≈2 weeks)
+### Phase 3 — Stabilization & Soak (≈1 week)
 
-- [ ] Open Flux PR for prod overlay
-- [ ] Roll out to one prod worker node first; observe for 24 hours
-- [ ] Roll out to remaining workers, then control-plane nodes one at a time
-- [ ] 7-day soak on prod; track CPU + memory overhead in Grafana
-- [ ] Tune scrape interval, map sizes, ringbuf size based on observed load
-- [ ] Document any incidents or surprises in the repo postmortem doc
-- [ ] **Validation:** all 6 nodes running ≥7 days continuously meeting CPU/memory budgets
+The original Phase 3 was framed as "Production Rollout" with a stage → prod sequence. For this
+single-cluster homelab, that distinction does not exist: the DaemonSet already runs on all 6 nodes
+(3 control-plane + 3 worker), the "staging" namespace _is_ the cluster-wide deployment, and there is
+no separate prod cluster to promote to. The phase is retitled and re-scoped to the actual remaining
+work: observe the deployment under real load, set alert thresholds from observed baselines, and
+write the operator-facing runbook.
+
+- [ ] 24–48 hour soak observation on all 6 nodes; track CPU + memory overhead in Grafana against the
+      ≤2% CPU / ≤64 MiB RSS budgets
+- [ ] Tune scrape interval, map sizes, ringbuf size if soak surfaces pressure
+- [ ] Set alert thresholds from observed baselines: retransmit-rate spike alert, DNS p99 SLO,
+      SRTT-tail outlier alert, agent-pod CrashLoop / restart alert
+- [ ] Operator runbook in `gjcourt/netscope`: how to read each panel, how to interpret threshold
+      breaches, how to regenerate `vmlinux.h` across Talos kernel upgrades, how to disable a
+      misbehaving program without taking down the agent
+- [ ] **Validation:** 7-day rolling window meeting CPU/memory budgets; alerts wired into the
+      existing homelab alerting path; runbook checked in and linked from the dashboard
 
 ### Phase 4 — Documentation & Postmortem (≈1 week)
 
@@ -266,6 +279,33 @@ Items surfaced during the spike that materially altered the plan:
    floors for the Phase 2 hooks (`fentry`/`fexit` 5.5+, ringbuf 5.8+, tcx 6.6+) are well behind it.
    The Phase 0 friction was entirely Kubernetes-side (PSA, capabilities, seccomp).
 
+## Phase 2 Findings
+
+Items surfaced during the core-metrics phase that are worth capturing:
+
+1. **SRTT extraction took three verifier iterations.** Reaching `tcp_sock->srtt_us` from an
+   `fentry/tcp_rcv_established` program requires the right cast pattern, and CI did not catch the
+   verifier traps — they only fired against the live kernel on stage. Postmortem at
+   [`gjcourt/netscope` → `docs/postmortems/2026-05-10-srtt-verifier-iterations.md`](https://github.com/gjcourt/netscope/blob/main/docs/postmortems/2026-05-10-srtt-verifier-iterations.md).
+2. **Kernel-load CI smoke is overdue.** Three production-caught verifier bugs on a single feature is
+   the signal. Tracked at [`gjcourt/netscope#10`](https://github.com/gjcourt/netscope/issues/10);
+   the fix is a CI job that loads each program against a real kernel before merge (KIND with a
+   matching kernel, or a small qemu-based loader).
+3. **`bpf_skc_to_tcp_sock` is the modern path** for reaching kernel sub-types from `fentry`
+   programs. The cast-via-`bpf_core_cast` pattern is what unblocked SRTT and is the right reach for
+   any future per-flow TCP state work in this project.
+4. **DNS coverage is connected-UDP-sockets only.** The `udp_sendmsg` hook captures queries where the
+   socket has been `connect()`'d to the resolver, which covers systemd-resolved and Go
+   `net.Resolver`. It does **not** cover glibc `res_send`, which uses `sendto()` with an explicit
+   `msg_name`. Acceptable for v1 (the homelab's resolver paths are covered), but worth flagging
+   before shipping a "DNS latency from this host" claim. Per-domain breakdown via the ringbuf path
+   is the future-work knob — userspace can decode the QNAME and emit a label.
+5. **In-kernel correlation scales fine for DNS.** The original plan drained query/response events
+   through a ringbuf and matched them userspace-side. The shipping design instead keeps an
+   8192-entry per-CPU hashmap in BPF (txid → start-ns), looks up the matching entry in the recv
+   path, and writes directly into the latency histogram. No userspace state machine, no ringbuf
+   drain pressure, confirmed in production on all 6 nodes.
+
 ## Open Questions
 
 - **Default-route interface discovery** — Phase 1 should replace the hardcoded `eno1` default with
@@ -280,6 +320,17 @@ Items surfaced during the spike that materially altered the plan:
   should resolve this properly.
 - **Phase 5 commitment** — is per-pod attribution a real requirement or a learning curiosity? It is
   the single largest piece of post-v1 work and should be decided before Phase 4 closes.
+- **Phase 4 timing** — some of the postmortem work already happened out-of-band via the SRTT
+  postmortem PR
+  ([`gjcourt/netscope` → `docs/postmortems/2026-05-10-srtt-verifier-iterations.md`](https://github.com/gjcourt/netscope/blob/main/docs/postmortems/2026-05-10-srtt-verifier-iterations.md)).
+  Open: does Phase 4 collapse to "write the README + architecture doc + kill-or-continue verdict"
+  and reference the existing postmortem, or do we add a second project-wide retrospective doc?
+- **Explicit "kill or continue" verdict** — the Exit Criteria call for one. The current answer is
+  almost certainly **continue**: three Hubble-distinct panels are live (retransmits, SRTT, DNS
+  latency), all 6 nodes are stable, the project is healthy. Worth writing down formally in Phase 4
+  rather than leaving implicit.
+- **Per-domain DNS latency breakdown** — meaningful v2 work via QNAME decoding in the ringbuf path;
+  not urgent and explicitly deferred.
 
 ### Resolved during Phase 0
 
