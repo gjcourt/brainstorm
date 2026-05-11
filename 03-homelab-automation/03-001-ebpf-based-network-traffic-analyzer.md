@@ -51,8 +51,8 @@ CO-RE relocations, and the userspace BPF loader stack.
       stage node showing both Cilium and project programs attached, with documented attach order
 - [ ] Source repository (`gjcourt/netscope` or equivalent) contains: README, architecture doc, build
       instructions, CO-RE / `vmlinux.h` regeneration steps, and Talos-specific deployment notes
-- [ ] Helm chart or Flux Kustomization in `gjcourt/homelab` deploys the DaemonSet via GitOps; stage
-      and prod overlays are distinct
+- [ ] Helm chart or Flux Kustomization in `gjcourt/homelab` deploys the DaemonSet via GitOps;
+      single-cluster homelab so there is one overlay, not a stage/prod split (see Phase 3)
 - [ ] Postmortem document captures: what was learned, what surprised, what would be done
       differently, and an explicit "kill or continue" recommendation for ongoing maintenance
 
@@ -193,8 +193,9 @@ Prove the riskiest assumptions on a single staging node before committing.
 - [x] kprobe on `udp_recvmsg` (or tracepoint equivalent) for matching DNS response — userspace
       computes RTT (replaced with in-kernel hashmap correlation; userspace just scrapes the latency
       histogram)
-- [x] Userspace agent: drain ringbuf, maintain in-flight DNS query table with TTL eviction, compute
-      and export latency histogram
+- [x] ~~Userspace agent: drain ringbuf, maintain in-flight DNS query table with TTL eviction,
+      compute and export latency histogram~~ — superseded by in-kernel hashmap correlation;
+      userspace only scrapes the histogram map (see Phase 2 Findings)
 - [x] Grafana dashboard: 3 required panels (retransmit rate, SRTT histogram, DNS latency
       percentiles)
 - [x] **Validation:** all 5 BPF programs (1 tcx + 4 fentry/fexit) attached cleanly on every one of
