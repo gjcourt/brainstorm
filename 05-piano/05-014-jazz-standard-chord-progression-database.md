@@ -20,8 +20,8 @@ them to any key, and display Roman numeral analysis.
 ## Repo
 
 Built at [`gjcourt/changes`](https://github.com/gjcourt/changes) — a Go web app mirroring the
-`vitals` pattern (Go server + embedded JSON corpus + vanilla-JS frontend). The bug-prone music
-logic (chord parsing, transposition, Roman-numeral analysis) lives in a pure, unit-tested
+`vitals` pattern (Go server + embedded JSON corpus + vanilla-JS frontend). The bug-prone music logic
+(chord parsing, transposition, Roman-numeral analysis) lives in a pure, unit-tested
 `internal/theory` package; `web/` is a dumb renderer over a small JSON API.
 
 ## Exit Criteria
@@ -38,6 +38,7 @@ logic (chord parsing, transposition, Roman-numeral analysis) lives in a pure, un
 ## Progress
 
 - [x] Initial research — settled on the vitals stack (Go + vanilla `web/`), engine-in-Go design
-- [x] Implementation — theory engine, library + embedded corpus (10 standards), JSON API, frontend; gofmt/vet/golangci-lint clean, race tests pass
+- [x] Implementation — theory engine, library + embedded corpus (10 standards), JSON API, frontend;
+      gofmt/vet/golangci-lint clean, race tests pass
 - [x] Documentation — `README.md` + `AGENTS.md` (how to add a standard, the API, invariants)
 - [ ] Backfill corpus + optional homelab deploy
