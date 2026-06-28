@@ -72,6 +72,19 @@ Already have: **ESP32 / Seeed XIAO ESP32-C3 dev board + USB-C cable** (brains, W
 
 Recommended extras (good practice, often skipped): a **0.1 µF cap** across the TSOP VS↔GND + a **~100 Ω** resistor in its supply line (datasheet supply filtering). Internal pull-up means a 10 kΩ on the TSOP output is usually unnecessary.
 
+**Sourcing — Mouser (all in stock):**
+
+| Item | Mouser part | Pick / note |
+|---|---|---|
+| IR receiver | Vishay **TSOP38238** | exact part |
+| IR LED 940 nm | Vishay **TSAL6400** | **6400 over 6200** — higher output = range; buy ~10 (spares + makes shipping worth it) |
+| NPN transistor | onsemi **PN2222A** (or 2N3904) | **prefer PN2222A** (~800 mA vs 2N3904's ~200 mA — more headroom pulsing the LED) |
+| Resistors | a **through-hole resistor kit** | covers 470 Ω–1 kΩ base + 33–100 Ω LED; reusable |
+
+Links: [TSOP38238](https://www.mouser.com/ProductDetail/Vishay-Semiconductors/TSOP38238?qs=RzxYCzJDjPVjpHVZS582Ng%3D%3D) · [TSAL6400](https://www.mouser.com/ProductDetail/Vishay-Semiconductors/TSAL6400/?qs=oSAwVt7aKTHCOCv1ythi7g%3D%3D) · [2N3904](https://www.mouser.com/ProductDetail/Diotec-Semiconductor/2N3904?qs=OlC7AqGiEDlYMySw5i2rlg%3D%3D) · [resistor kits](https://www.mouser.com/c/passive-components/resistors/resistor-kits/) · [breadboards](https://www.mouser.com/new/bps/bps-breadboards/) · [jumper wires](https://www.mouser.com/c/tools-supplies/prototyping-products/jumper-wires/)
+
+Caveats: get the **chips from Mouser**, but the **breadboard + jumpers are cheaper on Amazon/SparkFun** (~$7 bundle). Parts total only a few $, so **pad the order** (10× TSAL6400, 2× TSOP38238, 2× transistor, resistor kit) so shipping is worth it — still <$20.
+
 **Circuit:** TSOP `OUT→GPIO`, `GND→GND`, `VS→3.3V`. LED driver: `GPIO→470Ω–1kΩ→transistor base`; `emitter→GND`; `IR LED anode→33–100Ω→5V` (use the board's 5V/VBUS for range); `LED cathode→collector`. Logic stays 3.3 V; LED runs off 5 V via the transistor (no transistor = ~6-inch range).
 
 **Tools:** phone **front camera** to confirm the LED fires (IR shows faint purple; rear cams have IR-cut filters). Soldering iron only if going permanent; multimeter handy.
