@@ -32,6 +32,48 @@ by pulling 433 MHz sensors into Home Assistant.
 - Most of what makes RF fun is **RX** (see TX note below). Buy RX now; add TX only with a goal.
 - ⚠️ Buy genuine from **rtl-sdr.com** (v4) — counterfeits are rampant.
 
+## How RF capture works (the detailed process)
+
+**Software radio vs purpose-built receiver.** Unlike an IR TSOP (which demodulates in hardware
+and hands you a clean on/off envelope — see [[03-019]]), the RTL-SDR does the hard part in
+*software*. It grabs a raw ~2.4 MHz slice of spectrum as **I/Q samples** (amplitude+phase pairs,
+~2.4M/sec) and streams them over USB; **all demodulation/decoding happens on the PC.** Flexible
+(receives anything in range) but PC-dependent.
+
+⚠️ **Capture ≠ re-transmit.** The RTL-SDR is **receive-only** — it's only *half* the loop. To
+replay an RF code you add a transmitter (below). (And note: the audio remotes are **IR**, so RF
+capture is for 433 MHz sensors / the odd RF remote / learning — not the remotes.)
+
+**Signal chain:** antenna → tuner downconverts a slice to baseband → 8-bit ADC → USB → PC software
+(waterfall / demod / decode).
+
+**Capture workflow:**
+1. **See it** — open a waterfall (SDR++/CubicSDR/gqrx), tune **433.92 MHz** (common ISM), trigger
+   the device → a burst lights up, confirming frequency + that it's transmitting.
+2. **Decode — two paths:**
+   - **`rtl_433` (easy win, sensors):** knows hundreds of 433/315/868/915 MHz device protocols.
+     `rtl_433 -f 433.92M` prints decoded JSON (`{"model":"Acurite","temperature_C":21.3,...}`) — no
+     RE needed if the device is in its DB (most cheap sensors are).
+   - **Universal Radio Hacker (unknown signals):** record I/Q, URH auto-detects modulation (usually
+     **OOK/ASK**, sometimes FSK), shows the bit pattern → extract preamble/address/command/checksum.
+3. **Result:** decoded sensor readings, or a reverse-engineered protocol.
+
+**Capture → Home Assistant (the real payoff, RX-only):** for 433 MHz sensors you *ingest*, not
+replay. `rtl_433 -f 433.92M -F mqtt://broker:1883,...` publishes every decoded device to MQTT → HA
+auto-discovers them as sensors. One RTL-SDR = a whole-house 433 receiver (temp/humidity/door/leak)
+into HA, no per-device hub.
+
+**Re-transmit RF (the other half — needs a TX device):** RTL-SDR can't transmit, so to replay:
+- **CC1101 + ESP32 (~$5)** — sub-GHz OOK/FSK TX, runs **ESPHome** → integrates into HA exactly like
+  the IR blaster ([[03-019]]). This is the RF "capture-and-replay into HA" path: capture with
+  RTL-SDR/URH, replay via CC1101.
+- **Flipper / Broadlink RM4 Pro** — handheld / plug-and-play TX.
+- Division of labor: **RTL-SDR = listen & understand; CC1101/Broadlink = transmit.**
+
+**Gotchas:** find the frequency first (FCC ID on fccid.io, or scan 433.92/315/915); antenna length
+matters (433 vs 915); 8-bit/2.4 MHz is fine for narrow OOK but **can't** do wideband FHSS (the
+[[03-024]] baby monitor); most cheap gear is OOK/ASK (easy), some FSK.
+
 ## Progression (each a self-contained win)
 
 1. **ADS-B** — decode aircraft (dump1090) and plot live planes. Classic first success, ~1 afternoon.
