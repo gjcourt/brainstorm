@@ -1,4 +1,4 @@
-# Homelab & Automation Projects (23)
+# Homelab & Automation Projects (25)
 
 This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastructure.
 
@@ -24,8 +24,10 @@ This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastr
 | 03-016 | [Homelab Environmental Monitor (Temp/Humidity/Air Quality)](03-016-homelab-environmental-monitor-temp-humidity-air-quality.md) | Not Started | Easy       | 1-2 days        |
 | 03-017 | [Automated Network Vulnerability Scanner](03-017-automated-network-vulnerability-scanner.md)                                   | Not Started | Medium     | 1-4 weeks       |
 | 03-018 | [Custom DNS Sinkhole with Analytics](03-018-custom-dns-sinkhole-with-analytics.md)                                             | Not Started | Medium     | 1-4 weeks       |
-| 03-019 | [ESP32-based IR Blaster for Legacy Devices](03-019-esp32-based-ir-blaster-for-legacy-devices.md)                               | Not Started | Easy       | 1-2 days        |
+| 03-019 | [ESP32-based IR Blaster for Legacy Devices](03-019-esp32-based-ir-blaster-for-legacy-devices.md)                               | In Progress | Easy       | 1-2 days        |
 | 03-020 | [Smart Water Leak Detection and Shutoff](03-020-smart-water-leak-detection-and-shutoff.md)                                     | Not Started | Medium     | 1-4 weeks       |
 | 03-021 | [Personal AI Assistant with Voice — QLoRA Fine-Tuned Qwen3-32B](03-021-personal-ai-assistant-voice-qlora.md)                   | Not Started | Hard       | Months          |
 | 03-022 | [AI Coach & Mentor — QLoRA Fine-Tuned Qwen3-32B with RAG Book Corpus](03-022-ai-coach-mentor-qlora-rag.md)                     | Not Started | Hard       | Months          |
 | 03-023 | [Homelab Autonomous Agent — QLoRA Fine-Tuned Qwen2.5-Coder-32B](03-023-homelab-autonomous-agent-qlora.md)                      | Not Started | Hard       | Months          |
+| 03-024 | [Babysense Baby-Monitor Video Tap (teardown → homelab stream)](03-024-babysense-baby-monitor-video-tap.md)                     | Not Started | Hard       | Weeks           |
+| 03-025 | [RF/SDR Exploration & Decoding (RTL-SDR on-ramp)](03-025-rf-sdr-exploration-and-decoding.md)                                   | Not Started | Medium     | 1-4 weeks       |

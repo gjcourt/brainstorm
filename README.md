@@ -1,6 +1,6 @@
-# 104 Multidisciplinary Engineering & Skill-Building Projects
+# 106 Multidisciplinary Engineering & Skill-Building Projects
 
-Welcome to the brainstorm repository! This repository contains a curated list of 104 project ideas
+Welcome to the brainstorm repository! This repository contains a curated list of 106 project ideas
 designed to expand your skill set across software engineering, hardware, woodworking, finance, and
 music.
 
@@ -19,13 +19,13 @@ Kubernetes, Docker, etc.):
 
 ## Categories
 
-The 104 projects are divided into the following categories:
+The 106 projects are divided into the following categories:
 
 1. **[Audio & MIDI](01-audio-midi/projects.md)** (15 Projects) - DSP, custom controllers, and audio
    hardware.
 2. **[Woodworking](02-woodworking/projects.md)** (15 Projects) - Functional furniture, speaker
    cabinets, and homelab enclosures.
-3. **[Homelab & Automation](03-homelab-automation/projects.md)** (23 Projects) - eBPF, K8s
+3. **[Homelab & Automation](03-homelab-automation/projects.md)** (25 Projects) - eBPF, K8s
    operators, ESP32 sensors, and infrastructure.
 4. **[Finance & Analysis](04-finance-analysis/projects.md)** (15 Projects) - EDGAR parsing, DCF
    modeling, and personal finance tracking.
