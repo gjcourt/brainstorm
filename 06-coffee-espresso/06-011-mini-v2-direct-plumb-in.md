@@ -4,7 +4,7 @@ number: '06-011'
 category: 'coffee-espresso'
 difficulty: 'Easy'
 time_commitment: '1-2 days'
-target_skills: 'Water Plumbing, Pressure Regulation, BSP Fittings'
+target_skills: 'Water Plumbing, Pressure Regulation, NPT/Push-Fit Fittings'
 status: 'Not Started'
 depends_on:
   - hardware/lucca-a53
