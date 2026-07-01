@@ -5,7 +5,7 @@ category: 'coffee-espresso'
 difficulty: 'Hard'
 time_commitment: '2-4 weeks (install) + ongoing tuning'
 target_skills: 'Mains Wiring, Sensor Plumbing/Fittings, `leva!` Configuration, Pressure-Loop Tuning'
-status: 'Not Started'
+status: 'In Progress'
 depends_on:
   - hardware/lucca-a53
   - hardware/ito-module
@@ -170,9 +170,13 @@ curves in-thread if you post phase plots.
       successfully (index at `.../home-barista-thread-index/INDEX.md`)
 - [x] Scoped to profiling-only; split PID takeover into 06-012
 - [ ] Pre-flight: confirm vibe pump, inspect grouphead path, check seal condition, bypass pressure
-- [ ] Source ito kit from the EU (full kit: pressure sensor + flow meter)
+- [x] Source ito kit from the EU (complete kit in hand: module + pressure sensor + flow meter +
+      encoder)
+- [ ] Source not-in-kit extras (flow-meter fittings, SNS wiring, PETG, tablet) — measure line
+      sizes + confirm the pre-tapped sensor port first
 - [ ] Install pressure sensor (T-tap) + flow meter (pre-pump)
-- [ ] Wire pump to ito SNS; design + print display/encoder housing
+- [ ] Wire pump to ito SNS (combine the machine-open work with 06-011's switched-mains interlock
+      tap); design + print PETG display/encoder housing
 - [ ] Flash leva!; install Status Monitor XML
 - [ ] Set bypass + `PRESS OPV`; run pressure pre-test
 - [ ] Tune K/I, PHASE OFF, Flow Corr against Status Monitor plots

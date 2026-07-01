@@ -5,7 +5,7 @@ category: 'coffee-espresso'
 difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'Water Plumbing, Pressure Regulation, NPT/Push-Fit Fittings'
-status: 'Not Started'
+status: 'In Progress'
 depends_on:
   - hardware/lucca-a53
 ---
@@ -320,7 +320,7 @@ Net: do this project freely now; it does not foreclose — and arguably enables 
 - [x] Buy parts (incl. NC brass solenoid + coil supply; smart-plug/ESP32 optional, HA layer only)
 - [ ] Test water hardness at Claryum output
 - [ ] Build regulation stack (shut-off → solenoid → regulator)
-- [ ] Wire solenoid via smart plug; bench-test open/close before plumbing
+- [ ] Wire solenoid coil to machine's switched-mains rail; bench-test open/close before plumbing
 - [ ] Drill rear-wall hole (~5/8", step bit); mount float valve with gasket + locknut
 - [ ] Wet test
 - [ ] Solenoid power-cycle + power-loss shutoff verified
