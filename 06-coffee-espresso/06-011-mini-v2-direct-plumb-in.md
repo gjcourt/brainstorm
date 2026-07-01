@@ -78,7 +78,18 @@ The **Aquasana Claryum is a contaminant/taste filter (chlorine, chloramine, PFAS
 does not soften water.** It does not remove calcium / magnesium hardness or significantly reduce
 alkalinity. La Spaziale boilers don't auto-flush, so scale matters here.
 
-**Do this before installing anything:**
+> **Resolved 2026-07-01 — kit not needed for this address.** SFPUC monitoring (2017 sheets from
+> `golson@sfwater.org`, City Reservoir Outlets table) puts **3545 Washington St, Presidio Heights
+> (94118)** on the **northern Hetch Hetchy low-mineral zone** (Lombard/Sutro service area):
+> **hardness ~9–22, alkalinity ~13–27, chloride ~3–7 mg/L** — all comfortably inside the
+> espresso-safe targets below. Hetch Hetchy is very soft and stable year-to-year, and the Claryum
+> doesn't alter these three, so the distribution figures are a valid proxy for the Claryum output.
+> **Verdict: soft water → Claryum sufficient, no softening cartridge, low scale risk.** (Only
+> College Hill / HTWTP-fed neighborhoods — Bernal, Glen Park, parts of Mission/Noe — run ~62
+> hardness; not this address.) Alkalinity ~27 sits just below the 40–80 taste band — a dial-in
+> nicety, not a plumb-in blocker.
+
+**To verify independently (optional):**
 
 1. API GH/KH titration kit (~$8) — reads hardness + alkalinity directly. (A TDS meter is only a
    rough proxy; the Claryum doesn't reduce TDS, so its reading ≈ tap.)
@@ -318,7 +329,8 @@ Net: do this project freely now; it does not foreclose — and arguably enables 
 - [x] Decided: reservoir float-fill (not inlet plumb) for vibe-pump robustness
 - [x] BoM scoped against existing Aquasana Claryum infrastructure
 - [x] Buy parts (incl. NC brass solenoid + coil supply; smart-plug/ESP32 optional, HA layer only)
-- [ ] Test water hardness at Claryum output
+- [x] Water quality confirmed soft (SFPUC 2017, Presidio Heights) — no softener; optional re-verify
+      at Claryum output
 - [ ] Build regulation stack (shut-off → solenoid → regulator)
 - [ ] Wire solenoid coil to machine's switched-mains rail; bench-test open/close before plumbing
 - [ ] Drill rear-wall hole (~5/8", step bit); mount float valve with gasket + locknut
