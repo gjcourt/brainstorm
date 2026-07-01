@@ -159,8 +159,8 @@ have a 2-button "type G" display. Do **not** reflash the ESP8266 WiFi chip.
   **SNS-sense** path rather than the documented mechanical-switch PID install.
 - **The A53 wrinkle** is its **over-pressure bypass valve** (returns water to pump inlet): set it
   > 9 bar and configure `Press OPV`, or it fights the profile and biases the flow meter.
-- Full rationale + BOM + install steps live in brainstorm `06-001` (profiling) and `06-012` (the
-  blocked PID takeover).
+- Full rationale + BOM + install steps live in `lab` `06-001` (profiling) and `06-012` (the blocked
+  PID takeover).
 
 ---
 

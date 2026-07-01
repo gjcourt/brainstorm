@@ -1,7 +1,8 @@
 # 107 Multidisciplinary Engineering & Skill-Building Projects
 
-Welcome to the brainstorm repository! This repository contains a curated list of 107 project ideas
-designed to expand your skill set across software engineering, hardware, woodworking, finance, and
+Welcome to `lab` (formerly `brainstorm`) — a curated portfolio of 107 engineering and skill-building
+projects tracked across their whole lifecycle: from idea (`Not Started`) through active build
+(`In Progress`) to `Done`. They span software engineering, hardware, woodworking, finance, and
 music.
 
 ## Difficulty Scale
