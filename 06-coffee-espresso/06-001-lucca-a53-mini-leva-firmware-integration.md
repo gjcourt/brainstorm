@@ -182,6 +182,8 @@ curves in-thread if you post phase plots.
 
 ## Sources
 
+- **In-repo digest:** [`_reference/leva/LEVA-DOCS-SUMMARY.md`](_reference/leva/LEVA-DOCS-SUMMARY.md)
+  — executive summary + page index of the two manuals (read this before the PDFs).
 - Local: leva! firmware manual + hardware-installation PDF,
   `/Volumes/family/projects/electronics/espresso/leva! (for ito)/`
 - Local: full thread index,
